@@ -1813,6 +1813,292 @@ paths:
                     items:
                       type: string
         description: 'optional input filter for tags'
+  /mediaItem/{mediaItemKey}:
+    put:
+      tags:
+        - mediaItems
+      summary: update media item
+      operationId: updateMediaItemDetails
+      description: This API update media item
+      parameters:
+        - in: path
+          name: mediaItemKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: media item details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - mediaItems
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        mediaItems:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/MediaItem'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                properties:
+                  Title:
+                    type: string
+                  UserData:
+                    type: object
+                    additionalProperties: {}
+                  RetentionInMinutes:
+                    type: integer
+                    format: int32
+                  Tags:
+                    type: array
+                    items:
+                      type: string
+                  UniqueName:
+                    type: string
+        description: 'optional input filter for tags'
+  /mediaItem/{mediaItemKey}/{physicalPathKey}:
+    put:
+      tags:
+        - mediaItems
+      summary: update media item
+      operationId: updatePhysicalPathDetails
+      description: This API update the physical path
+      parameters:
+        - in: path
+          name: mediaItemKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: physicalPathKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: media item details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - mediaItems
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        mediaItems:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/MediaItem'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - RetentionInMinutes
+                properties:
+                  RetentionInMinutes:
+                    type: integer
+                    format: int32
+        description: 'optional input filter for tags'
+  /mediaItems/{mediaItemKey}:
+    post:
+      tags:
+        - mediaItems
+      summary: provide media item details
+      operationId: mediaItemDetailsByMediaItemKey
+      description: This API provides media item details
+      parameters:
+        - in: path
+          name: mediaItemKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: media item details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - mediaItems
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        mediaItems:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/MediaItem'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /mediaItems/{mediaItemKey}/{physicalPathKey}:
+    post:
+      tags:
+        - mediaItems
+      summary: provide details about one profile of the media item
+      operationId: mediaItemDetailsByPhysicalPathKey
+      description: This API provides media item details by physicalPathKey
+      parameters:
+        - in: path
+          name: mediaItemKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: path
+          name: physicalPathKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: media item details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - mediaItems
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        mediaItems:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/MediaItem'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /tags:
+    get:
+      tags:
+        - mediaItems
+      summary: list tags meeting the input filter parameters
+      operationId: listTags
+      description: This API lists tags meeting the input filter parameters
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: rows
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: contentType
+          required: false
+          schema:
+            type: string
+            enum: [Video, Audio, Image]
+      responses:
+        '200':
+          description: list tags
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - tags
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        tags:
+                          type: array
+                          items:
+                            type: string
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
   /encodingJobs:
     get:
       tags:
@@ -2623,7 +2909,7 @@ components:
         shareWorkspace:
           type: boolean
           example: true
-    videoTrack:
+    VideoTrack:
       type: object
       required:
         - videoTrackKey
