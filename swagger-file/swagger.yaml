@@ -13,17 +13,19 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
   - name: MMS account
-    description: Sign in, registration
+    description: sign in, registration
   - name: workspace
-    description: Creation, sharing, ...
+    description: creation, sharing, ...
   - name: mediaItems
     description: list/update media items (contents)
   - name: ingestion
     description: ingestion Jobs, ...
   - name: encoding
     description: encoding Jobs, ...
+  - name: encodingProfiles
+    description: creation, update, ...
   - name: encoder
-    description: Add new encoders, encoders pool, ...
+    description: add new encoders, encoders pool, ...
   - name: workflowAsLibrary
     description: libraries of workflow
   - name: other
@@ -2304,6 +2306,62 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
+  /profile/{encodingProfileKey}:
+    get:
+      tags:
+        - encodingProfile
+      summary: provide encoding profile details
+      operationId: encodingProfileDetails
+      description: listprovide encoding profile details
+      parameters:
+        - in: path
+          name: encodingProfileKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: contentType
+          required: false
+          schema:
+            type: string
+            enum: [Video, Audio, Image]
+        - in: query
+          name: label
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: encoding profile details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - encodingJobs
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        encodingJobs:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/EncodingProfile'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
 components:
   securitySchemes:
     BasicAuth:
@@ -2532,7 +2590,7 @@ components:
         mediaItems:
           type: array
           items:
-            $ref: '#/components/schemas/...'
+            $ref: '#/components/schemas/MediaItem'
         metaDataContent:
           type: string
         processorMMS:
@@ -2540,6 +2598,139 @@ components:
         uploadingProgress:
           type: integer
           format: int32
+    EncodingProfile:
+      type: object
+      required:
+        - encodingProfileKey
+        - label
+        - contentType
+        - global
+        - deliveryTechnology
+        - profile
+      properties:
+        encodingProfileKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        contentType:
+          type: string
+          enum: [Video, Audio, Image]
+        global:
+          type: boolean
+        deliveryTechnology:
+          type: string
+        profile:
+          type: object
+          items:
+            type: object
+            required:
+              - Label
+              - FileFormat
+            properties:
+              Label:
+                type: string
+              FileFormat:
+                type: string
+              HLS:
+                $ref: '#/components/schemas/EncodingProfileHLSParameters'
+              Video:
+                $ref: '#/components/schemas/EncodingProfileVideoParameters'
+              Audio:
+                $ref: '#/components/schemas/EncodingProfileAudioParameters'
+              Image:
+                $ref: '#/components/schemas/EncodingProfileImageParameters'
+    EncodingProfileHLSParameters:
+      type: object
+      required:
+        - SegmentDuration
+      properties:
+        SegmentDuration:
+          type: integer
+          format: int32
+    EncodingProfileVideoParameters:
+      type: object
+      required:
+        - Codec
+        - Profile
+        - BitRates
+        - TwoPasses
+        - FrameRate
+        - OtherOutputParameters
+      properties:
+        Codec:
+          type: string
+        Profile:
+          type: string
+        BitRates:
+          type: object
+          items:
+            type: object
+            required:
+              - Width
+              - Height
+              - KBitRate
+            properties:
+              Width:
+                type: integer
+                format: int32
+              Height:
+                type: integer
+                format: int32
+              KBitRate:
+                type: integer
+                format: int32
+        TwoPasses:
+          type: boolean
+        FrameRate:
+          type: integer
+          format: int32
+        OtherOutputParameters:
+          type: string
+    EncodingProfileAudioParameters:
+      type: object
+      required:
+        - Codec
+        - ChannelsNumber
+        - BitRates
+      properties:
+        Codec:
+          type: string
+        ChannelsNumber:
+          type: integer
+          format: int32
+        BitRates:
+          type: object
+          items:
+            type: object
+            required:
+              - KBitRate
+            properties:
+              KBitRate:
+                type: integer
+                format: int32
+    EncodingProfileImageParameters:
+      type: object
+      required:
+        - Width
+        - Height
+        - InterlaceType
+        - AspectRatio
+        - Comment
+      properties:
+        Width:
+          type: integer
+          format: int32
+        Height:
+          type: integer
+          format: int32
+        InterlaceType:
+          type: string
+          enum: [NoInterlace, LineInterlace, PlaneInterlace, PartitionInterlace]
+        AspectRatio:
+          type: boolean
+        Comment:
+          type: string
     IngestionRoot:
       type: object
       required:
