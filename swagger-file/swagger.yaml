@@ -3,9 +3,9 @@ servers:
   - description: Media Management System Base URL
     url: https://mms-api.cloud-mms.com/catramms/v1
 info:
-  description: Media Management System API
+  description: Media Management System REST API
   version: v1
-  title: Media Management Service API
+  title: Media Management Service REST API
   contact:
     email: mms-technical-support@cloud-mms.com
   license:
@@ -18,12 +18,18 @@ tags:
     description: creation, sharing, ...
   - name: mediaItems
     description: list/update media items (contents)
+  - name: delivery
+    description: create delivery authorization for VOD and LIVE contents
   - name: ingestion
     description: ingestion Jobs, ...
   - name: encoding
     description: encoding Jobs, ...
   - name: encodingProfiles
     description: creation, update, ...
+  - name: youTube
+    description: youTube account/configuration, ...
+  - name: facebook
+    description: facebook account/configuration, ...
   - name: encoder
     description: add new encoders, encoders pool, ...
   - name: workflowAsLibrary
@@ -2309,7 +2315,7 @@ paths:
   /profile/{encodingProfileKey}:
     get:
       tags:
-        - encodingProfile
+        - encodingProfiles
       summary: provide encoding profile details
       operationId: encodingProfileDetails
       description: listprovide encoding profile details
@@ -2349,15 +2355,803 @@ paths:
                       type: object
                       required:
                         - numFound
-                        - encodingJobs
+                        - encodingProfiles
                       properties:
                         numFound:
                           type: integer
                           format: int32
-                        encodingJobs:
+                        encodingProfiles:
                           type: array
                           items:
                             $ref: '#/components/schemas/EncodingProfile'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    delete:
+      tags:
+        - encodingProfiles
+      summary: delete encoding profile
+      operationId: deleteEncodingProfile
+      description: delete encoding profile
+      parameters:
+        - in: path
+          name: encodingProfileKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: encoding profile removed successful
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /profilesSet/{encodingProfilesSetKey}:
+    get:
+      tags:
+        - encodingProfiles
+      summary: provide encoding profiles set details
+      operationId: encodingProfilesSetDetails
+      description: provide encoding profiles set details
+      parameters:
+        - in: path
+          name: encodingProfilesSetKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: contentType
+          required: false
+          schema:
+            type: string
+            enum: [Video, Audio, Image]
+      responses:
+        '200':
+          description: encoding profiles set details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - encodingProfilesSets
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        encodingProfilesSets:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/EncodingProfilesSet'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    delete:
+      tags:
+        - encodingProfiles
+      summary: delete encoding profiles set
+      operationId: deleteEncodingProfilesSet
+      description: delete encoding profiles set
+      parameters:
+        - in: path
+          name: encodingProfilesSetKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: encoding profiles set removed successful
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /profilesSet:
+    put:
+      tags:
+        - encodingProfiles
+      summary: add/update encoding profiles set
+      operationId: addEncodingProfilesSet
+      description: add/update encoding profiles set
+      parameters:
+        - in: query
+          name: contentType
+          required: true
+          schema:
+            type: string
+            enum: [Video, Audio, Image]
+      responses:
+        '200':
+          description: encoding profiles set details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - encodingProfilesSet
+                  properties:
+                    encodingProfilesSet:
+                      type: object
+                      required:
+                        - encodingProfilesSet
+                        - profiles
+                      properties:
+                        encodingProfilesSet:
+                          type: object
+                          required:
+                            - encodingProfilesSetKey
+                            - label
+                          properties:
+                            encodingProfilesSetKey:
+                              type: integer
+                              format: int64
+                            label:
+                              type: string
+                        profiles:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                              - encodingProfileKey
+                              - label
+                            properties:
+                              encodingProfileKey:
+                                type: integer
+                                format: int64
+                              label:
+                                type: string
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - Label
+                  - Profiles
+                properties:
+                  Label:
+                    type: string
+                    description: label of the encoding profiles set
+                  Profiles:
+                    type: array
+                    items:
+                      type: string
+                      description: label of the encoding profile
+        description: 'encoding profiles set details'
+  /profile:
+    put:
+      tags:
+        - encodingProfiles
+      summary: add/update encoding profile
+      operationId: addEncodingProfile
+      description: add/update encoding profile
+      parameters:
+        - in: query
+          name: contentType
+          required: true
+          schema:
+            type: string
+            enum: [Video, Audio, Image]
+      responses:
+        '200':
+          description: encoding profile details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - encodingProfilesSetKey
+                    - label
+                  properties:
+                    encodingProfilesSetKey:
+                      type: integer
+                      format: int64
+                    label:
+                      type: string
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EncodingProfileBody'
+        description: 'encoding profiles set details'
+  /delivery/vod/{physicalPathKey}:
+    get:
+      tags:
+        - delivery
+      summary: create a VOD delivery authorization
+      operationId: createVODDeliveryAuthorization
+      description: create a VOD delivery authorization
+      parameters:
+        - in: path
+          name: physicalPathKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: ttlInSeconds
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: maxRetries
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: save
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: authorizationThroughPath
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: redirect
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '201':
+          description: authorization details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - deliveryURL
+                    - deliveryFileName
+                    - ttlInSeconds
+                    - maxRetries
+                  properties:
+                    deliveryURL:
+                      type: string
+                    deliveryFileName:
+                      type: string
+                    ttlInSeconds:
+                      type: integer
+                      format: int32
+                    maxRetries:
+                      type: integer
+                      format: int32
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /delivery/live/{ingestionJobKey}:
+    get:
+      tags:
+        - delivery
+      summary: create a LIVE delivery authorization
+      operationId: createLIVEDeliveryAuthorization
+      description: create a LIVE delivery authorization
+      parameters:
+        - in: path
+          name: ingestionJobKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: ttlInSeconds
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: maxRetries
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: authorizationThroughPath
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: redirect
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '201':
+          description: authorization details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - deliveryURL
+                    - deliveryFileName
+                    - ttlInSeconds
+                    - maxRetries
+                  properties:
+                    deliveryURL:
+                      type: string
+                    deliveryFileName:
+                      type: string
+                    ttlInSeconds:
+                      type: integer
+                      format: int32
+                    maxRetries:
+                      type: integer
+                      format: int32
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /bulkOfDelivery:
+    post:
+      tags:
+        - delivery
+      summary: create a bulk of delivery authorizations
+      operationId: createBulkDeliveryAuthorization
+      description: create a bulk of delivery authorizations
+      parameters:
+        - in: query
+          name: ttlInSeconds
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: maxRetries
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: authorizationThroughPath
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: authorizations request details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - uniqueNameList
+                    - liveIngestionJobKeyList
+                  properties:
+                    uniqueNameList:
+                      type: object
+                      items:
+                        type: object
+                        required:
+                          - uniqueName
+                          - encodingProfileKey
+                          - encodingProfileLabel
+                          - deliveryURL
+                        properties:
+                          uniqueName:
+                            type: string
+                          encodingProfileKey:
+                            type: integer
+                            format: int64
+                          encodingProfileLabel:
+                            type: string
+                          deliveryURL:
+                            type: string
+                    liveIngestionJobKeyList:
+                      type: object
+                      items:
+                        type: object
+                        required:
+                          - ingestionJobKey
+                          - deliveryCode
+                          - deliveryURL
+                        properties:
+                          ingestionJobKey:
+                            type: integer
+                            format: int64
+                          deliveryCode:
+                            type: integer
+                            format: int64
+                          deliveryURL:
+                            type: string
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - uniqueNameList
+                  - liveIngestionJobKeyList
+                properties:
+                  uniqueNameList:
+                    type: object
+                    items:
+                      type: object
+                      required:
+                        - uniqueName
+                        - encodingProfileKey
+                        - encodingProfileLabel
+                      properties:
+                        uniqueName:
+                          type: string
+                        encodingProfileKey:
+                          type: integer
+                          format: int64
+                        encodingProfileLabel:
+                          type: string
+                  liveIngestionJobKeyList:
+                    type: object
+                    items:
+                      type: object
+                      required:
+                        - ingestionJobKey
+                        - deliveryCode
+                      properties:
+                        ingestionJobKey:
+                          type: integer
+                          format: int64
+                        deliveryCode:
+                          type: integer
+                          format: int64
+        description: 'request authorizations details'
+  /conf/youtube:
+    get:
+      tags:
+        - youtube
+      summary: list all youTube configuration
+      operationId: listYouTubeConfiguration
+      description: list all youTube configuration
+      responses:
+        '200':
+          description: youTube configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - youTubeConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        youTubeConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/YouTubeConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - youtube
+      summary: add a youTube configuration
+      operationId: addYouTubeConfiguration
+      description: add a youTube configuration
+      responses:
+        '201':
+          description: youTube configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - Label
+                  - RefreshToken
+                properties:
+                  Label:
+                    type: string
+                  RefreshToken:
+                    type: string
+        description: 'youTube configuration details'
+  /conf/youtube/{confKey}:
+    put:
+      tags:
+        - youtube
+      summary: update a youTube configuration
+      operationId: modifyYouTubeConfiguration
+      description: update a youTube configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: youTube configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - Label
+                  - RefreshToken
+                properties:
+                  Label:
+                    type: string
+                  RefreshToken:
+                    type: string
+        description: 'youTube configuration details'
+    delete:
+      tags:
+        - youtube
+      summary: delete a youTube configuration
+      operationId: deleteYouTubeConfiguration
+      description: delete a youTube configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: youTube configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /conf/facebook:
+    get:
+      tags:
+        - facebook
+      summary: list all facebook configuration
+      operationId: listFacebookConfiguration
+      description: list all facebook configuration
+      responses:
+        '200':
+          description: facebook configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - facebookConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        facebookConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/FacebookConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - facebook
+      summary: add a facebook configuration
+      operationId: addFacebookConfiguration
+      description: add a facebook configuration
+      responses:
+        '201':
+          description: facebook configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - Label
+                  - PageToken
+                properties:
+                  Label:
+                    type: string
+                  PageToken:
+                    type: string
+        description: 'facebook configuration details'
+  /conf/facebook/{confKey}:
+    put:
+      tags:
+        - facebook
+      summary: update a facebook configuration
+      operationId: modifyFacebookConfiguration
+      description: update a facebook configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: facebook configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                type: object
+                required:
+                  - Label
+                  - PageToken
+                properties:
+                  Label:
+                    type: string
+                  PageToken:
+                    type: string
+        description: 'facebook configuration details'
+    delete:
+      tags:
+        - facebook
+      summary: delete a facebook configuration
+      operationId: deleteFacebookConfiguration
+      description: delete a facebook configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: facebook configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -2621,25 +3415,25 @@ components:
         deliveryTechnology:
           type: string
         profile:
-          type: object
-          items:
-            type: object
-            required:
-              - Label
-              - FileFormat
-            properties:
-              Label:
-                type: string
-              FileFormat:
-                type: string
-              HLS:
-                $ref: '#/components/schemas/EncodingProfileHLSParameters'
-              Video:
-                $ref: '#/components/schemas/EncodingProfileVideoParameters'
-              Audio:
-                $ref: '#/components/schemas/EncodingProfileAudioParameters'
-              Image:
-                $ref: '#/components/schemas/EncodingProfileImageParameters'
+          $ref: '#/components/schemas/EncodingProfileBody'
+    EncodingProfileBody:
+      type: object
+      required:
+        - Label
+        - FileFormat
+      properties:
+        Label:
+          type: string
+        FileFormat:
+          type: string
+        HLS:
+          $ref: '#/components/schemas/EncodingProfileHLSParameters'
+        Video:
+          $ref: '#/components/schemas/EncodingProfileVideoParameters'
+        Audio:
+          $ref: '#/components/schemas/EncodingProfileAudioParameters'
+        Image:
+          $ref: '#/components/schemas/EncodingProfileImageParameters'
     EncodingProfileHLSParameters:
       type: object
       required:
@@ -2730,6 +3524,40 @@ components:
         AspectRatio:
           type: boolean
         Comment:
+          type: string
+    EncodingProfilesSet:
+      type: object
+      required:
+        - encodingProfilesSetKey
+        - label
+        - contentType
+        - encodingProfiles
+      properties:
+        encodingProfilesSetKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        contentType:
+          type: string
+          enum: [Video, Audio, Image]
+        encodingProfiles:
+          type: array
+          items:
+            $ref: '#/components/schemas/EncodingProfile'
+    FacebookConf:
+      type: object
+      required:
+        - confKey
+        - label
+        - pageToken
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        pageToken:
           type: string
     IngestionRoot:
       type: object
@@ -3265,3 +4093,17 @@ components:
           example: Daily
         userAPIKey:
           $ref: '#/components/schemas/UserAPIKey'
+    YouTubeConf:
+      type: object
+      required:
+        - confKey
+        - label
+        - refreshToken
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        refreshToken:
+          type: string
