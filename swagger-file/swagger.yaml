@@ -26,14 +26,18 @@ tags:
     description: encoding Jobs, ...
   - name: encodingProfiles
     description: creation, update, ...
-  - name: youTube
-    description: youTube account/configuration, ...
-  - name: facebook
-    description: facebook account/configuration, ...
+  - name: social
+    description: youTube/facebook account/configuration, ...
+  - name: channels
+    description: IP/SAT channels configuration, ...
   - name: encoder
     description: add new encoders, encoders pool, ...
   - name: workflowAsLibrary
     description: libraries of workflow
+  - name: ftp
+    description: FTP configuration, ...
+  - name: email
+    description: EMAIL configuration, ...
   - name: other
     description: status, support, ...
 security: 
@@ -2839,7 +2843,7 @@ paths:
   /conf/youtube:
     get:
       tags:
-        - youtube
+        - social
       summary: list all youTube configuration
       operationId: listYouTubeConfiguration
       description: list all youTube configuration
@@ -2876,7 +2880,7 @@ paths:
           description: 'internal server error'
     post:
       tags:
-        - youtube
+        - social
       summary: add a youTube configuration
       operationId: addYouTubeConfiguration
       description: add a youTube configuration
@@ -2918,7 +2922,7 @@ paths:
   /conf/youtube/{confKey}:
     put:
       tags:
-        - youtube
+        - social
       summary: update a youTube configuration
       operationId: modifyYouTubeConfiguration
       description: update a youTube configuration
@@ -2966,7 +2970,7 @@ paths:
         description: 'youTube configuration details'
     delete:
       tags:
-        - youtube
+        - social
       summary: delete a youTube configuration
       operationId: deleteYouTubeConfiguration
       description: delete a youTube configuration
@@ -2999,7 +3003,7 @@ paths:
   /conf/facebook:
     get:
       tags:
-        - facebook
+        - social
       summary: list all facebook configuration
       operationId: listFacebookConfiguration
       description: list all facebook configuration
@@ -3036,7 +3040,7 @@ paths:
           description: 'internal server error'
     post:
       tags:
-        - facebook
+        - social
       summary: add a facebook configuration
       operationId: addFacebookConfiguration
       description: add a facebook configuration
@@ -3078,7 +3082,7 @@ paths:
   /conf/facebook/{confKey}:
     put:
       tags:
-        - facebook
+        - social
       summary: update a facebook configuration
       operationId: modifyFacebookConfiguration
       description: update a facebook configuration
@@ -3126,7 +3130,7 @@ paths:
         description: 'facebook configuration details'
     delete:
       tags:
-        - facebook
+        - social
       summary: delete a facebook configuration
       operationId: deleteFacebookConfiguration
       description: delete a facebook configuration
@@ -3140,6 +3144,1061 @@ paths:
       responses:
         '200':
           description: facebook configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /conf/ipChannel:
+    get:
+      tags:
+        - channels
+      summary: list all IP channels configuration
+      operationId: listIPChannelsConfiguration
+      description: list all IP channels configuration
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: rows
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: label
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: url
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: type
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: name
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: region
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: country
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: labelOrder
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: ip channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - channelConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/IPChannelConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - channels
+      summary: add an IP channel configuration
+      operationId: addIPChannelConfiguration
+      description: add an IP channel configuration
+      responses:
+        '201':
+          description: ip channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IPChannelConf'
+        description: 'ip channel configuration details'
+  /conf/ipChannel/{confKey}:
+    get:
+      tags:
+        - channels
+      summary: get the IP channel configuration
+      operationId: ipChannelConfiguration
+      description: get the IP channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ip channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - channelConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/IPChannelConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    put:
+      tags:
+        - channels
+      summary: update an IP channel configuration
+      operationId: modifyIPChannelConfiguration
+      description: update an IP channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ip channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IPChannelConf'
+        description: 'ip channel configuration details'
+    delete:
+      tags:
+        - channels
+      summary: delete an IP channel configuration
+      operationId: deleteIPChannelConfiguration
+      description: delete an IP channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ip channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /conf/satChannel:
+    get:
+      tags:
+        - channels
+      summary: list all SAT channels configuration
+      operationId: listSATChannelsConfiguration
+      description: list all SAT channels configuration
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: rows
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: label
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: region
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: country
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: labelOrder
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - channelConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SATChannelConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - channels
+      summary: add a SAT channel configuration
+      operationId: addSATChannelConfiguration
+      description: add a SAT channel configuration
+      responses:
+        '201':
+          description: SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SATChannelConf'
+        description: 'SAT channel configuration details'
+  /conf/satChannel/{confKey}:
+    get:
+      tags:
+        - channels
+      summary: get the SAT channel configuration
+      operationId: satChannelConfiguration
+      description: get the SAT channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - channelConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SATChannelConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    put:
+      tags:
+        - channels
+      summary: update a SAT channel configuration
+      operationId: modifySATChannelConfiguration
+      description: update a SAT channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SATChannelConf'
+        description: 'SAT channel configuration details'
+    delete:
+      tags:
+        - channels
+      summary: delete a SAT channel configuration
+      operationId: deleteSATChannelConfiguration
+      description: delete a SAT channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /conf/sourceSatChannel:
+    get:
+      tags:
+        - channels
+      summary: list all source SAT channels configuration
+      operationId: listSourceSATChannelsConfiguration
+      description: list all Source SAT channels configuration
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: rows
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: serviceId
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: name
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: lnb
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: frequency
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: videoPid
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: audioPids
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: nameOrder
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: Source SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - channelConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SourceSATChannelConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - channels
+      summary: add a Source SAT channel configuration
+      operationId: addSourceSATChannelConfiguration
+      description: add a Source SAT channel configuration
+      responses:
+        '201':
+          description: Source SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceSATChannelConf'
+        description: 'Source SAT channel configuration details'
+  /conf/sourceSatChannel/{confKey}:
+    get:
+      tags:
+        - channels
+      summary: get the Source SAT channel configuration
+      operationId: sourceSatChannelConfiguration
+      description: get the Source SAT channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: source SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - channelConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/SourceSATChannelConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    put:
+      tags:
+        - channels
+      summary: update a Source SAT channel configuration
+      operationId: modifySourceSATChannelConfiguration
+      description: update a Source SAT channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Source SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceSATChannelConf'
+        description: 'Source SAT channel configuration details'
+    delete:
+      tags:
+        - channels
+      summary: delete a Source SAT channel configuration
+      operationId: deleteSourceSATChannelConfiguration
+      description: delete a Source SAT channel configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Source SAT channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /conf/ftp:
+    get:
+      tags:
+        - ftp
+      summary: list all FTP configuration
+      operationId: listFTPConfigurations
+      description: list all FTP configuration
+      responses:
+        '200':
+          description: FTP configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - ftpConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        ftpConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/FTPConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - ftp
+      summary: add a FTP configuration
+      operationId: addFTPConfiguration
+      description: add a FTP configuration
+      responses:
+        '201':
+          description: FTP configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FTPConf'
+        description: 'FTP configuration details'
+  /conf/ftp/{confKey}:
+    get:
+      tags:
+        - ftp
+      summary: list all FTP configuration
+      operationId: listFTPConfiguration
+      description: list all FTP configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: FTP configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - ftpConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        ftpConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/FTPConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    put:
+      tags:
+        - ftp
+      summary: update a FTP configuration
+      operationId: modifyFTPConfiguration
+      description: update a FTP configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: ftp configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FTPConf'
+        description: 'FTP configuration details'
+    delete:
+      tags:
+        - ftp
+      summary: delete a FTP configuration
+      operationId: deleteFTPConfiguration
+      description: delete a FTP configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: FTP configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+  /conf/email:
+    get:
+      tags:
+        - email
+      summary: list all EMail configuration
+      operationId: listEMailConfigurations
+      description: list all EMail configuration
+      responses:
+        '200':
+          description: EMail configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - emailConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        emailConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/EMailConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - email
+      summary: add a EMail configuration
+      operationId: addEMailConfiguration
+      description: add a EMail configuration
+      responses:
+        '201':
+          description: EMail configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EMailConf'
+        description: 'EMail configuration details'
+  /conf/email/{confKey}:
+    get:
+      tags:
+        - email
+      summary: list all EMail configuration
+      operationId: listEMailConfiguration
+      description: list all EMail configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: EMail configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - emailConf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        emailConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/EMailConf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    put:
+      tags:
+        - email
+      summary: update a EMail configuration
+      operationId: modifyEMailConfiguration
+      description: update a EMail configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: EMail configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EMailConf'
+        description: 'EMail configuration details'
+    delete:
+      tags:
+        - email
+      summary: delete an EMail configuration
+      operationId: deleteEMailConfiguration
+      description: delete an EMail configuration
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: EMail configuration details
           content:
             application/json:
               schema:
@@ -3559,6 +4618,33 @@ components:
           type: string
         pageToken:
           type: string
+    FTPConf:
+      type: object
+      required:
+        - confKey
+        - label
+        - server
+        - port
+        - userName
+        - password
+        - remoteDirectory
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        server:
+          type: string
+        port:
+          type: integer
+          format: int32
+        userName:
+          type: string
+        password:
+          type: string
+        remoteDirectory:
+          type: string
     IngestionRoot:
       type: object
       required:
@@ -3617,6 +4703,50 @@ components:
           format: int64
         label:
           type: string
+    IPChannelConf:
+      type: object
+      required:
+        - confKey
+        - label
+        - url
+        - type
+        - description
+        - name
+        - region
+        - country
+        - imageMediaItemKey
+        - imageUniqueName
+        - position
+        - channelData
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        url:
+          type: string
+        type:
+          type: string
+        description:
+          type: string
+        name:
+          type: string
+        region:
+          type: string
+        country:
+          type: string
+        imageMediaItemKey:
+          type: integer
+          format: int64
+        imageUniqueName:
+          type: string
+        position:
+          type: integer
+          format: int32
+        channelData:
+          type: object
+          additionalProperties: {}
     MediaItem:
       type: object
       required:
@@ -3750,6 +4880,110 @@ components:
           type: string
           format: date-time
           example: '2021-04-08T20:28:33Z'
+    SATChannelConf:
+      type: object
+      required:
+        - confKey
+        - sourceSATConfKey
+        - label
+        - region
+        - country
+        - imageMediaItemKey
+        - imageUniqueName
+        - position
+        - channelData
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        sourceSATConfKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        region:
+          type: string
+        country:
+          type: string
+        imageMediaItemKey:
+          type: integer
+          format: int64
+        imageUniqueName:
+          type: string
+        position:
+          type: integer
+          format: int32
+        channelData:
+          type: object
+          additionalProperties: {}
+    SourceSATChannelConf:
+      type: object
+      required:
+        - confKey
+        - serviceId
+        - networkId
+        - transportStreamId
+        - name
+        - satellite
+        - frequency
+        - lnb
+        - videoPid
+        - audioPids
+        - audioItalianPid
+        - audioEnglishPid
+        - teletextPid
+        - modulation
+        - polarization
+        - symbolRate
+        - country
+        - deliverySystem
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        serviceId:
+          type: integer
+          format: int64
+        networkId:
+          type: integer
+          format: int64
+        transportStreamId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        satellite:
+          type: string
+        frequency:
+          type: integer
+          format: int64
+        lnb:
+          type: string
+        videoPid:
+          type: integer
+          format: int32
+        audioPids:
+          type: string
+        audioItalianPid:
+          type: integer
+          format: int32
+        audioEnglishPid:
+          type: integer
+          format: int32
+        teletextPid:
+          type: integer
+          format: int32
+        modulation:
+          type: string
+        polarization:
+          type: string
+        symbolRate:
+          type: integer
+          format: int64
+        country:
+          type: string
+        deliverySystem:
+          type: string
     Support:
       type: object
       required:
