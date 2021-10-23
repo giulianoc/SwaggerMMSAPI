@@ -24,20 +24,20 @@ tags:
     description: ingestion Jobs, ...
   - name: encoding
     description: encoding Jobs, ...
-  - name: encodingProfiles
-    description: creation, update, ...
-  - name: social
-    description: youTube/facebook account/configuration, ...
-  - name: channels
-    description: IP/SAT channels configuration, ...
-  - name: encoder
-    description: add new encoders, encoders pool, ...
   - name: workflowAsLibrary
     description: libraries of workflow
+  - name: encodingProfiles
+    description: creation, update, ...
+  - name: channels
+    description: IP/SAT channels configuration, ...
+  - name: social
+    description: youTube/facebook account/configuration, ...
   - name: ftp
     description: FTP configuration, ...
   - name: email
     description: EMAIL configuration, ...
+  - name: encoder
+    description: add new encoders, encoders pool, ...
   - name: other
     description: status, support, ...
 security: 
@@ -830,7 +830,7 @@ paths:
     get:
       tags:
         - encoder
-      summary: provide encoder details
+      summary: get encoder details
       operationId: encoderDetails
       description: return the encoder details identified by the encoderKey parameter
       parameters:
@@ -1044,7 +1044,7 @@ paths:
     get:
       tags:
         - encoder
-      summary: provide encodersPool details
+      summary: get encodersPool details
       operationId: encodersPoolDetails
       description: return the encodersPool details identified by the encodersPoolKey parameter
       parameters:
@@ -1224,7 +1224,7 @@ paths:
     get:
       tags:
         - workflowAsLibrary
-      summary: provide the workflow library details
+      summary: get the workflow library details
       operationId: workflowAsLibraryContent
       description: return the workflow of the library identified by workflowLibraryKey
       parameters:
@@ -1402,9 +1402,9 @@ paths:
     get:
       tags:
         - ingestion
-      summary: provide the ingested workflow details
+      summary: get the ingested workflow details
       operationId: ingetionRootDetails
-      description: provide the ingested workflow details
+      description: get the ingested workflow details
       parameters:
         - in: path
           name: ingestionRootKey
@@ -1447,9 +1447,9 @@ paths:
     get:
       tags:
         - ingestion
-      summary: provide the workflow content
+      summary: get the workflow content
       operationId: ingetionRootMetadataContent
-      description: provide the workflow content
+      description: get the workflow content
       parameters:
         - in: path
           name: ingestionRootKey
@@ -1575,9 +1575,9 @@ paths:
     get:
       tags:
         - ingestion
-      summary: provide ingested job details
+      summary: get ingested job details
       operationId: ingetionJobDetails
-      description: provide ingested job details
+      description: get ingested job details
       parameters:
         - in: path
           name: ingestionJobKey
@@ -2277,9 +2277,9 @@ paths:
     get:
       tags:
         - encoding
-      summary: provide encoding job details
+      summary: get encoding job details
       operationId: encodingJobDetails
-      description: provide encoding job details
+      description: get encoding job details
       parameters:
         - in: path
           name: encodingJobKey
@@ -2374,9 +2374,9 @@ paths:
     get:
       tags:
         - encodingProfiles
-      summary: provide encoding profile details
+      summary: get encoding profile details
       operationId: encodingProfileDetails
-      description: listprovide encoding profile details
+      description: get encoding profile details
       parameters:
         - in: path
           name: encodingProfileKey
@@ -2450,9 +2450,9 @@ paths:
     get:
       tags:
         - encodingProfiles
-      summary: provide encoding profiles set details
+      summary: get encoding profiles set details
       operationId: encodingProfilesSetDetails
-      description: provide encoding profiles set details
+      description: get encoding profiles set details
       parameters:
         - in: path
           name: encodingProfilesSetKey
