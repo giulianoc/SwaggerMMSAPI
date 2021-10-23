@@ -1,7 +1,7 @@
 openapi: 3.0.0
 servers:
   - description: Media Management System Base URL
-    url: https://mms-api.cloud-mms.com/catramms/v1
+    url: https://mms-api.cloud-mms.com/catramms/1.0.1
 info:
   description: Media Management System REST API
   version: 1.0.1
@@ -1267,7 +1267,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /ingestionRoots:
+  /workflow:
     get:
       tags:
         - ingestion
@@ -1359,7 +1359,46 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /ingestionRoots/{ingestionRootKey}:
+    post:
+      tags:
+        - ingestion
+      summary: add a new workflow to be executed
+      operationId: addWorkflow
+      description: This API add a new workflow to be executed
+      responses:
+        '201':
+          description: details/identifiers about every single job belonging to the workflow
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - workflow
+                    - tasks
+                  properties:
+                    workflow:
+                      $ref: '#/components/schemas/IngestionWorkflowResponse'
+                    tasks:
+                      type: object
+                      items:
+                        $ref: '#/components/schemas/IngestionTaskResponse'
+        '400':
+          description: 'Json field is not present or it is null'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              items:
+                  $ref: '#/components/schemas/Workflow'
+        description: 'Workflow to be updated'
+  /workflow/{ingestionRootKey}:
     get:
       tags:
         - ingestion
@@ -1404,7 +1443,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /ingestionRoot/metaDataContent/{ingestionRootKey}:
+  /workflow/metaDataContent/{ingestionRootKey}:
     get:
       tags:
         - ingestion
@@ -1435,7 +1474,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /ingestionJobs:
+  /ingestionJob:
     get:
       tags:
         - ingestion
@@ -1532,7 +1571,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /ingestionJobs/{ingestionJobKey}:
+  /ingestionJob/{ingestionJobKey}:
     get:
       tags:
         - ingestion
@@ -1668,46 +1707,6 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /ingestion:
-    post:
-      tags:
-        - ingestion
-      summary: add a new workflow to be executed
-      operationId: addWorkflow
-      description: This API add a new workflow to be executed
-      responses:
-        '201':
-          description: details/identifiers about every single job belonging to the workflow
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - workflow
-                    - tasks
-                  properties:
-                    workflow:
-                      $ref: '#/components/schemas/IngestionWorkflowResponse'
-                    tasks:
-                      type: object
-                      items:
-                        $ref: '#/components/schemas/IngestionTaskResponse'
-        '400':
-          description: 'Json field is not present or it is null'
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              items:
-                  $ref: '#/components/schemas/Workflow'
-        description: 'Workflow to be updated'
   /mediaItem:
     get:
       tags:
@@ -2109,7 +2108,7 @@ paths:
                     type: integer
                     format: int32
         description: 'optional input filter for tags'
-  /tags:
+  /tag:
     get:
       tags:
         - mediaItems
@@ -2166,7 +2165,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /encodingJobs:
+  /encodingJob:
     get:
       tags:
         - encoding
@@ -2274,7 +2273,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /encodingJobs/{encodingJobKey}:
+  /encodingJob/{encodingJobKey}:
     get:
       tags:
         - encoding
@@ -2371,7 +2370,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /profile/{encodingProfileKey}:
+  /encodingProfile/{encodingProfileKey}:
     get:
       tags:
         - encodingProfiles
@@ -2447,7 +2446,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /profilesSet/{encodingProfilesSetKey}:
+  /encodingProfilesSet/{encodingProfilesSetKey}:
     get:
       tags:
         - encodingProfiles
@@ -2518,7 +2517,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /profilesSet:
+  /encodingProfilesSet:
     put:
       tags:
         - encodingProfiles
@@ -2598,7 +2597,7 @@ paths:
                       type: string
                       description: label of the encoding profile
         description: 'encoding profiles set details'
-  /profile:
+  /encodingProfile:
     put:
       tags:
         - encodingProfiles
@@ -2775,7 +2774,7 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /bulkOfDelivery:
+  /delivery/bulk:
     post:
       tags:
         - delivery
