@@ -60,8 +60,11 @@ paths:
                 type: object
                 required:
                   - status
+                  - version-api
                 properties:
                   status:
+                    type: string
+                  version-api:
                     type: string
         '500':
           description: API service is NOT up and running
@@ -254,9 +257,9 @@ paths:
     get:
       tags:
         - workspace
-      summary: list all the workspaces of a user, the own and shared workspaces
+      summary: list all the workspaces of a user, own and shared workspaces
       operationId: workspaceList
-      description: list all the workspaces of a user, the own and shared workspaces
+      description: list all the workspaces of a user, own and shared workspaces
       responses:
         '200':
           description: list of all the workspaces
@@ -1705,13 +1708,115 @@ paths:
               items:
                   $ref: '#/components/schemas/Workflow'
         description: 'Workflow to be updated'
-  /mediaItems:
+  /mediaItem:
+    get:
+      tags:
+        - mediaItems
+      summary: list media items (contents) meeting the query filter parameters
+      operationId: listMediaItemsWithoutTagsFilter
+      description: This API lists media items (contents) meeting the query filter parameters
+      parameters:
+        - in: query
+          name: start
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: rows
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - in: query
+          name: title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: uniqueName
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: contentType
+          required: false
+          schema:
+            type: string
+            enum: [Video, Audio, Image]
+        - in: query
+          name: liveRecordingChunk
+          required: false
+          schema:
+            type: boolean
+        - in: query
+          name: startIngestionDate
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: '2021-04-08T20:28:33Z'
+        - in: query
+          name: endIngestionDate
+          required: false
+          schema:
+            type: string
+            format: date-time
+            example: '2021-04-08T20:28:33Z'
+        - in: query
+          name: jsonCondition
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: orderBy
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: jsonOrderBy
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: list media items details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - mediaItems
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        mediaItems:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/MediaItem'
+        '400':
+          description: 'Json field is not present or it is null'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
     post:
       tags:
         - mediaItems
-      summary: list media items (contents) meeting the input filter parameters
-      operationId: listMediaItems
-      description: This API list media items (contents) meeting the input filter parameters
+      summary: list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags
+      operationId: listMediaItemsWithTagsFilter
+      description: This API list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags
       parameters:
         - in: query
           name: start
@@ -1826,6 +1931,52 @@ paths:
                       type: string
         description: 'optional input filter for tags'
   /mediaItem/{mediaItemKey}:
+    get:
+      tags:
+        - mediaItems
+      summary: get the media item meeting the path parameter mediaItemKey
+      operationId: listMediaItemsWithoutTagsFilter
+      description: This API get the media item meeting the path parameter mediaItemKey
+      parameters:
+        - in: path
+          name: mediaItemKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: list media items details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - mediaItems
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        mediaItems:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/MediaItem'
+        '400':
+          description: 'Json field is not present or it is null'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
     put:
       tags:
         - mediaItems
@@ -1897,9 +2048,9 @@ paths:
     put:
       tags:
         - mediaItems
-      summary: update media item
+      summary: update physical path metadata
       operationId: updatePhysicalPathDetails
-      description: This API update the physical path
+      description: This API updates physical path metadata
       parameters:
         - in: path
           name: mediaItemKey
@@ -1915,7 +2066,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: media item details
+          description: physical path details
           content:
             application/json:
               schema:
@@ -1958,102 +2109,6 @@ paths:
                     type: integer
                     format: int32
         description: 'optional input filter for tags'
-  /mediaItems/{mediaItemKey}:
-    post:
-      tags:
-        - mediaItems
-      summary: provide media item details
-      operationId: mediaItemDetailsByMediaItemKey
-      description: This API provides media item details
-      parameters:
-        - in: path
-          name: mediaItemKey
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: media item details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    # - requestParameters
-                    - response
-                  properties:
-                    # requestParameters:
-                    response:
-                      type: object
-                      required:
-                        - numFound
-                        - mediaItems
-                      properties:
-                        numFound:
-                          type: integer
-                          format: int32
-                        mediaItems:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/MediaItem'
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-  /mediaItems/{mediaItemKey}/{physicalPathKey}:
-    post:
-      tags:
-        - mediaItems
-      summary: provide details about one profile of the media item
-      operationId: mediaItemDetailsByPhysicalPathKey
-      description: This API provides media item details by physicalPathKey
-      parameters:
-        - in: path
-          name: mediaItemKey
-          required: true
-          schema:
-            type: integer
-            format: int64
-        - in: path
-          name: physicalPathKey
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: media item details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    # - requestParameters
-                    - response
-                  properties:
-                    # requestParameters:
-                    response:
-                      type: object
-                      required:
-                        - numFound
-                        - mediaItems
-                      properties:
-                        numFound:
-                          type: integer
-                          format: int32
-                        mediaItems:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/MediaItem'
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
   /tags:
     get:
       tags:
