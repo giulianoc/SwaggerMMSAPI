@@ -4,7 +4,7 @@ servers:
     url: https://mms-api.cloud-mms.com/catramms/v1
 info:
   description: Media Management System REST API
-  version: v1
+  version: 1.0.1
   title: Media Management Service REST API
   contact:
     email: mms-technical-support@cloud-mms.com
