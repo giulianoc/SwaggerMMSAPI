@@ -456,7 +456,7 @@ paths:
         - encoder
       summary: associate the encoder to the workspace
       operationId: workspaceEncoderAssociation
-      description: This API associates the encoder to a workspace
+      description: This API associates the encoder to a workspace. It can be executed only by a user having the admin priviledge
       parameters:
         - in: path
           name: workspaceKey
@@ -500,7 +500,7 @@ paths:
         - encoder
       summary: delete the association workspace-encoder
       operationId: deleteWorkspaceEncoder
-      description: delete the association workspace-encoder. Only admin has the rights to do it
+      description: delete the association workspace-encoder. It can be executed only by a user having the admin priviledge
       parameters:
         - in: path
           name: workspaceKey
@@ -1001,7 +1001,7 @@ paths:
         - encoder
       summary: add a new encodersPool
       operationId: addEncodersPool
-      description: This API adds a new encodersPool into the MMS platform.
+      description: This API adds a new encodersPool into the MMS platform. It can be executed only by a user having the editEncodersPool or admin priviledge
       responses:
         '201':
           description: encodersPool created successful
@@ -1090,7 +1090,7 @@ paths:
         - encoder
       summary: update of the EncodersPool metadata
       operationId: updateEncodersPool
-      description: This API updates the EncodersPool metadata.
+      description: This API updates the EncodersPool metadata. It can be executed only by a user having the editEncodersPool or admin priviledge
       parameters:
         - in: path
           name: encodersPoolKey
@@ -1132,7 +1132,7 @@ paths:
         - encoder
       summary: remove the EncodersPool
       operationId: deleteEncodersPool
-      description: delete the EncodersPool identified by the encodersPoolKey parameter
+      description: delete the EncodersPool identified by the encodersPoolKey parameter. It can be executed only by a user having the editEncodersPool or admin priviledge
       parameters:
         - in: path
           name: encodersPoolKey
@@ -1364,7 +1364,7 @@ paths:
         - ingestion
       summary: add a new workflow to be executed
       operationId: addWorkflow
-      description: This API add a new workflow to be executed
+      description: This API add a new workflow to be executed. It can be executed only by a user having the ingestWorkflow or admin priviledge
       responses:
         '201':
           description: details/identifiers about every single job belonging to the workflow
@@ -1685,9 +1685,9 @@ paths:
     delete:
       tags:
         - ingestion
-      summary: remove the ingestion job
-      operationId: deleteIngestionJob
-      description: delete the ingestion job identified by the ingestionJobKey parameter
+      summary: cancel the ingestion job
+      operationId: cancelIngestionJob
+      description: cancel the ingestion job identified by the ingestionJobKey parameter. It can be executed only by a user having the cancelIngestionJob or admin priviledge
       parameters:
         - in: path
           name: ingestionJobKey
@@ -1934,7 +1934,7 @@ paths:
       tags:
         - mediaItems
       summary: get the media item meeting the path parameter mediaItemKey
-      operationId: listMediaItemsWithoutTagsFilter
+      operationId: listMediaItem
       description: This API get the media item meeting the path parameter mediaItemKey
       parameters:
         - in: path
@@ -1981,7 +1981,7 @@ paths:
         - mediaItems
       summary: update media item
       operationId: updateMediaItemDetails
-      description: This API update media item
+      description: This API update media item. It can be executed only by a user having the editMedia or admin priviledge
       parameters:
         - in: path
           name: mediaItemKey
@@ -2049,7 +2049,7 @@ paths:
         - mediaItems
       summary: update physical path metadata
       operationId: updatePhysicalPathDetails
-      description: This API updates physical path metadata
+      description: This API updates physical path metadata. It can be executed only by a user having the editMedia or admin priviledge
       parameters:
         - in: path
           name: mediaItemKey
@@ -2355,7 +2355,7 @@ paths:
         - encoding
       summary: remove/kill the EncodingJob
       operationId: removeEncodingJob
-      description: This API remove if not started or kill if it is running the encoding job.
+      description: This API remove if not started or kill if it is running the encoding job. It can be executed only by a user having the killEncoding or admin priviledge
       parameters:
         - in: path
           name: encodingJobKey
@@ -2431,7 +2431,7 @@ paths:
         - encodingProfiles
       summary: delete encoding profile
       operationId: deleteEncodingProfile
-      description: delete encoding profile
+      description: delete encoding profile. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
         - in: path
           name: encodingProfileKey
@@ -2502,7 +2502,7 @@ paths:
         - encodingProfiles
       summary: delete encoding profiles set
       operationId: deleteEncodingProfilesSet
-      description: delete encoding profiles set
+      description: delete encoding profiles set. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
         - in: path
           name: encodingProfilesSetKey
@@ -2523,7 +2523,7 @@ paths:
         - encodingProfiles
       summary: add/update encoding profiles set
       operationId: addEncodingProfilesSet
-      description: add/update encoding profiles set
+      description: add/update encoding profiles set. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
         - in: query
           name: contentType
@@ -2603,7 +2603,7 @@ paths:
         - encodingProfiles
       summary: add/update encoding profile
       operationId: addEncodingProfile
-      description: add/update encoding profile
+      description: add/update encoding profile. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
         - in: query
           name: contentType
@@ -2645,7 +2645,7 @@ paths:
         - delivery
       summary: create a VOD delivery authorization
       operationId: createVODDeliveryAuthorization
-      description: create a VOD delivery authorization
+      description: create a VOD delivery authorization. It can be executed only by a user having the deliveryAuthorization or admin priviledge
       parameters:
         - in: path
           name: physicalPathKey
@@ -2715,7 +2715,7 @@ paths:
         - delivery
       summary: create a LIVE delivery authorization
       operationId: createLIVEDeliveryAuthorization
-      description: create a LIVE delivery authorization
+      description: create a LIVE delivery authorization. It can be executed only by a user having the deliveryAuthorization or admin priviledge
       parameters:
         - in: path
           name: ingestionJobKey
@@ -2780,7 +2780,7 @@ paths:
         - delivery
       summary: create a bulk of delivery authorizations
       operationId: createBulkDeliveryAuthorization
-      description: create a bulk of delivery authorizations
+      description: create a bulk of delivery authorizations. It can be executed only by a user having the deliveryAuthorization or admin priviledge
       parameters:
         - in: query
           name: ttlInSeconds
@@ -2937,7 +2937,7 @@ paths:
         - social
       summary: add a youTube configuration
       operationId: addYouTubeConfiguration
-      description: add a youTube configuration
+      description: add a youTube configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       responses:
         '201':
           description: youTube configuration details
@@ -2979,7 +2979,7 @@ paths:
         - social
       summary: update a youTube configuration
       operationId: modifyYouTubeConfiguration
-      description: update a youTube configuration
+      description: update a youTube configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3027,7 +3027,7 @@ paths:
         - social
       summary: delete a youTube configuration
       operationId: deleteYouTubeConfiguration
-      description: delete a youTube configuration
+      description: delete a youTube configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3097,7 +3097,7 @@ paths:
         - social
       summary: add a facebook configuration
       operationId: addFacebookConfiguration
-      description: add a facebook configuration
+      description: add a facebook configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       responses:
         '201':
           description: facebook configuration details
@@ -3139,7 +3139,7 @@ paths:
         - social
       summary: update a facebook configuration
       operationId: modifyFacebookConfiguration
-      description: update a facebook configuration
+      description: update a facebook configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3187,7 +3187,7 @@ paths:
         - social
       summary: delete a facebook configuration
       operationId: deleteFacebookConfiguration
-      description: delete a facebook configuration
+      description: delete a facebook configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3306,7 +3306,7 @@ paths:
         - channels
       summary: add an IP channel configuration
       operationId: addIPChannelConfiguration
-      description: add an IP channel configuration
+      description: add an IP channel configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       responses:
         '201':
           description: ip channel configuration details
@@ -3382,7 +3382,7 @@ paths:
         - channels
       summary: update an IP channel configuration
       operationId: modifyIPChannelConfiguration
-      description: update an IP channel configuration
+      description: update an IP channel configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3420,7 +3420,7 @@ paths:
         - channels
       summary: delete an IP channel configuration
       operationId: deleteIPChannelConfiguration
-      description: delete an IP channel configuration
+      description: delete an IP channel configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3524,7 +3524,7 @@ paths:
         - channels
       summary: add a SAT channel configuration
       operationId: addSATChannelConfiguration
-      description: add a SAT channel configuration
+      description: add a SAT channel configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       responses:
         '201':
           description: SAT channel configuration details
@@ -3600,7 +3600,7 @@ paths:
         - channels
       summary: update a SAT channel configuration
       operationId: modifySATChannelConfiguration
-      description: update a SAT channel configuration
+      description: update a SAT channel configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3638,7 +3638,7 @@ paths:
         - channels
       summary: delete a SAT channel configuration
       operationId: deleteSATChannelConfiguration
-      description: delete a SAT channel configuration
+      description: delete a SAT channel configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3760,7 +3760,7 @@ paths:
         - channels
       summary: add a Source SAT channel configuration
       operationId: addSourceSATChannelConfiguration
-      description: add a Source SAT channel configuration
+      description: add a Source SAT channel configuration. It can be executed only by a user having the admin priviledge
       responses:
         '201':
           description: Source SAT channel configuration details
@@ -3836,7 +3836,7 @@ paths:
         - channels
       summary: update a Source SAT channel configuration
       operationId: modifySourceSATChannelConfiguration
-      description: update a Source SAT channel configuration
+      description: update a Source SAT channel configuration. It can be executed only by a user having the admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3874,7 +3874,7 @@ paths:
         - channels
       summary: delete a Source SAT channel configuration
       operationId: deleteSourceSATChannelConfiguration
-      description: delete a Source SAT channel configuration
+      description: delete a Source SAT channel configuration. It can be executed only by a user having the admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3944,7 +3944,7 @@ paths:
         - ftp
       summary: add a FTP configuration
       operationId: addFTPConfiguration
-      description: add a FTP configuration
+      description: add a FTP configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       responses:
         '201':
           description: FTP configuration details
@@ -4020,7 +4020,7 @@ paths:
         - ftp
       summary: update a FTP configuration
       operationId: modifyFTPConfiguration
-      description: update a FTP configuration
+      description: update a FTP configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -4058,7 +4058,7 @@ paths:
         - ftp
       summary: delete a FTP configuration
       operationId: deleteFTPConfiguration
-      description: delete a FTP configuration
+      description: delete a FTP configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -4128,7 +4128,7 @@ paths:
         - email
       summary: add a EMail configuration
       operationId: addEMailConfiguration
-      description: add a EMail configuration
+      description: add a EMail configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       responses:
         '201':
           description: EMail configuration details
@@ -4204,7 +4204,7 @@ paths:
         - email
       summary: update a EMail configuration
       operationId: modifyEMailConfiguration
-      description: update a EMail configuration
+      description: update a EMail configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -4242,7 +4242,7 @@ paths:
         - email
       summary: delete an EMail configuration
       operationId: deleteEMailConfiguration
-      description: delete an EMail configuration
+      description: delete an EMail configuration. It can be executed only by a user having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
