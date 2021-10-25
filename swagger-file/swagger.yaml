@@ -1,7 +1,9 @@
 openapi: 3.0.0
 servers:
-  - description: Media Management System Base URL
+  - description: Media Management System on cloud
     url: https://mms-api.cloud-mms.com/catramms/1.0.1
+  - description: Media Management System used by CiborTV/SerieC
+    url: https://mms-api.restream.ovh/catramms/1.0.1
 info:
   description: Media Management System REST API
   version: 1.0.1
@@ -95,12 +97,11 @@ paths:
       security: []
       tags:
         - MMS account
-      summary: login into the MMS platform and return the api-key
+      summary: login into the MMS platform. The api-key is returned
       operationId: login
       description: This API allows the user to login into the MMS platform.
-        As input user and password as input, the output will be the api-key
+        As input user and password, the output will be the api-key
         associated to the user default workspace
-        with all the rights the user has on the specified workspace
       responses:
         '200':
           description: login done successful
@@ -156,6 +157,7 @@ paths:
                   required:
                     - userKey
                     - workspaceKey
+                    - confirmationCode
                   properties:
                     userKey:
                       type: integer
@@ -165,6 +167,8 @@ paths:
                       type: integer
                       format: int64
                       example: 824
+                    confirmationCode:
+                      type: string
         '400':
           description: 'Json field is not present or it is null'
         '500':
@@ -338,7 +342,7 @@ paths:
         - workspace
       summary: update of a Workspace metadata
       operationId: updateWorkspace
-      description: This API updates the Workspace metadata. Only the owner of the workspace is able to do the update. Moreover, the isEnabled, maxEncodingPriority, encodingPeriod,
+      description: This API updates the Workspace metadata. Only the owner of the workspace is able to do the update. Moreover, the isEnabled, expirationDate, maxEncodingPriority, encodingPeriod,
         maxIngestionsNumber and maxStorageInMB fields can be updated only by admin
       responses:
         '200':
@@ -368,6 +372,7 @@ paths:
                   - MaxIngestionsNumber
                   - MaxStorageInMB
                   - LanguageCode
+                  - ExpirationDate
                   - CreateRemoveWorkspace
                   - IngestWorkflow
                   - CreateProfiles
@@ -403,6 +408,10 @@ paths:
                   LanguageCode:
                     type: string
                     example: it
+                  ExpirationDate:
+                    type: string
+                    format: date-time
+                    example: '2021-04-08T20:28:33Z'
                   CreateRemoveWorkspace:
                     type: boolean
                     example: true
@@ -1447,7 +1456,7 @@ paths:
     get:
       tags:
         - ingestion
-      summary: get the workflow content
+      summary: get the workflow content by a json format
       operationId: ingetionRootMetadataContent
       description: get the workflow content
       parameters:
@@ -1478,7 +1487,7 @@ paths:
     get:
       tags:
         - ingestion
-      summary: list of ingested jobs
+      summary: list all the ingested jobs
       operationId: ingetionJobsList
       description: return the list of ingestion jobs meeting the input filter parameters
       parameters:
@@ -1575,7 +1584,7 @@ paths:
     get:
       tags:
         - ingestion
-      summary: get ingested job details
+      summary: get the ingested job details
       operationId: ingetionJobDetails
       description: get ingested job details
       parameters:
@@ -1619,9 +1628,9 @@ paths:
     put:
       tags:
         - ingestion
-      summary: update of the IngestionJob metadata
+      summary: update the IngestionJob metadata
       operationId: updateIngestionJob
-      description: This API updates the IngestionJob metadata. It is possible to update the IngestionJob metadata only in case his status is Start_TaskQueued and his type is LiveRecorder. In this scenario it is possible to change the ingestion job label and/or the channel label and/or the recording period start and/or the recording period end and/or the recording virtual vod
+      description: This API updates the IngestionJob metadata. It is possible to update the IngestionJob metadata only in case his status is Start_TaskQueued and his type is LiveRecorder. In this scenario it is possible to change the ingestion job label and/or the channel label and/or the recording period start and/or the recording period end and/or the recording virtual vod. It can be executed only by a user having the editMedia or admin priviledge
       parameters:
         - in: path
           name: ingestionJobKey
@@ -1711,7 +1720,7 @@ paths:
     get:
       tags:
         - mediaItems
-      summary: list media items (contents) meeting the query filter parameters
+      summary: list all media items metadata
       operationId: listMediaItemsWithoutTagsFilter
       description: This API lists media items (contents) meeting the query filter parameters
       parameters:
@@ -1813,7 +1822,7 @@ paths:
     post:
       tags:
         - mediaItems
-      summary: list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags
+      summary: list all the media items metadata. It is a POST because the body could contain a filter about the tags
       operationId: listMediaItemsWithTagsFilter
       description: This API list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags
       parameters:
@@ -1933,9 +1942,9 @@ paths:
     get:
       tags:
         - mediaItems
-      summary: get the media item meeting the path parameter mediaItemKey
+      summary: get the media item metadata specified by the path parameter mediaItemKey
       operationId: listMediaItem
-      description: This API get the media item meeting the path parameter mediaItemKey
+      description: This API gets the media item meeting the path parameter mediaItemKey
       parameters:
         - in: path
           name: mediaItemKey
@@ -1979,7 +1988,7 @@ paths:
     put:
       tags:
         - mediaItems
-      summary: update media item
+      summary: update the media item metadata
       operationId: updateMediaItemDetails
       description: This API update media item. It can be executed only by a user having the editMedia or admin priviledge
       parameters:
@@ -2047,7 +2056,7 @@ paths:
     put:
       tags:
         - mediaItems
-      summary: update physical path metadata
+      summary: update the physical path metadata
       operationId: updatePhysicalPathDetails
       description: This API updates physical path metadata. It can be executed only by a user having the editMedia or admin priviledge
       parameters:
@@ -2112,7 +2121,7 @@ paths:
     get:
       tags:
         - mediaItems
-      summary: list tags meeting the input filter parameters
+      summary: list all the tags metadata
       operationId: listTags
       description: This API lists tags meeting the input filter parameters
       parameters:
@@ -2169,7 +2178,7 @@ paths:
     get:
       tags:
         - encoding
-      summary: list of encoding jobs
+      summary: list all the encoding jobs
       operationId: encodingJobsList
       description: return the list of encoding jobs meeting the input filter parameters
       parameters:
@@ -2277,7 +2286,7 @@ paths:
     get:
       tags:
         - encoding
-      summary: get encoding job details
+      summary: get the encoding job details
       operationId: encodingJobDetails
       description: get encoding job details
       parameters:
@@ -2321,7 +2330,7 @@ paths:
     put:
       tags:
         - encoding
-      summary: update of the EncodingJob metadata
+      summary: update the EncodingJob metadata
       operationId: updateEncodingJob
       description: This API updates the encoding priority of an encoding job or, if the tryEncodingAgain query parameter is true, re-try again the encoding.
       parameters:
@@ -2374,7 +2383,7 @@ paths:
     get:
       tags:
         - encodingProfiles
-      summary: get encoding profile details
+      summary: get the encoding profile details identified by encodingProfileKey
       operationId: encodingProfileDetails
       description: get encoding profile details
       parameters:
@@ -2429,7 +2438,7 @@ paths:
     delete:
       tags:
         - encodingProfiles
-      summary: delete encoding profile
+      summary: delete the encoding profile
       operationId: deleteEncodingProfile
       description: delete encoding profile. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
@@ -2450,7 +2459,7 @@ paths:
     get:
       tags:
         - encodingProfiles
-      summary: get encoding profiles set details
+      summary: get the encoding profiles set details identified by encodingProfilesSetKey
       operationId: encodingProfilesSetDetails
       description: get encoding profiles set details
       parameters:
@@ -2500,7 +2509,7 @@ paths:
     delete:
       tags:
         - encodingProfiles
-      summary: delete encoding profiles set
+      summary: delete the encoding profiles set
       operationId: deleteEncodingProfilesSet
       description: delete encoding profiles set. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
@@ -2521,7 +2530,7 @@ paths:
     put:
       tags:
         - encodingProfiles
-      summary: add/update encoding profiles set
+      summary: add/update the encoding profiles set
       operationId: addEncodingProfilesSet
       description: add/update encoding profiles set. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
@@ -2601,7 +2610,7 @@ paths:
     put:
       tags:
         - encodingProfiles
-      summary: add/update encoding profile
+      summary: add/update the encoding profile
       operationId: addEncodingProfile
       description: add/update encoding profile. It can be executed only by a user having the createProfiles or admin priviledge
       parameters:
@@ -2643,7 +2652,7 @@ paths:
     get:
       tags:
         - delivery
-      summary: create a VOD delivery authorization
+      summary: create a VOD delivery authorization and return an authorized delivery URL
       operationId: createVODDeliveryAuthorization
       description: create a VOD delivery authorization. It can be executed only by a user having the deliveryAuthorization or admin priviledge
       parameters:
@@ -2713,7 +2722,7 @@ paths:
     get:
       tags:
         - delivery
-      summary: create a LIVE delivery authorization
+      summary: create a LIVE delivery authorization and return an authorized delivery URL
       operationId: createLIVEDeliveryAuthorization
       description: create a LIVE delivery authorization. It can be executed only by a user having the deliveryAuthorization or admin priviledge
       parameters:
@@ -2778,7 +2787,7 @@ paths:
     post:
       tags:
         - delivery
-      summary: create a bulk of delivery authorizations
+      summary: create a bulk of delivery authorizations and one authorized delivery URL for each media specified by the bulk
       operationId: createBulkDeliveryAuthorization
       description: create a bulk of delivery authorizations. It can be executed only by a user having the deliveryAuthorization or admin priviledge
       parameters:
@@ -5087,7 +5096,7 @@ components:
         - creationDate
         - expirationDate
         - ldapEnabled
-        - loginWorkspace
+        - workspace
       properties:
         name:
           type: string
@@ -5114,7 +5123,7 @@ components:
         ldapEnabled:
           type: boolean
           example: false
-        loginWorkspace:
+        workspace:
           $ref: '#/components/schemas/Workspace'
     User:
       type: object
@@ -5158,6 +5167,7 @@ components:
         - apiKey
         - owner
         - default
+        - expirationDate
         - admin
         - applicationRecorder
         - cancelIngestionJob
@@ -5180,6 +5190,10 @@ components:
         default:
           type: boolean
           example: true
+        expirationDate:
+          type: string
+          format: date-time
+          example: '2021-04-08T20:28:33Z'
         admin:
           type: boolean
           example: true
