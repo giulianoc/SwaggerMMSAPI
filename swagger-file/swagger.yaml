@@ -1,8 +1,8 @@
 openapi: 3.0.0
 servers:
-  - description: Media Management System on cloud
+  - description: Media Management System on cloud (<b>Public MMS platform, it can be used by anyone</b>)
     url: https://mms-api.cloud-mms.com/catramms/1.0.1
-  - description: Media Management System used by CiborTV/SerieC
+  - description: Media Management System used by CiborTV/SerieC (<b>Private MMS platform, no registration is allowed</b>)
     url: https://mms-api.restream.ovh/catramms/1.0.1
 info:
   description: Media Management System REST API
@@ -15,9 +15,9 @@ info:
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
   - name: MMS User
-    description: <ul><li>The steps to create a new User are<ol><li>register a new User<li>confirm the registration of the User</ol><li>When a User is created, a new Workspace  (see next section) is also automatically created and associated to the User<li>The registration and confirmation APIs can be called without any authorization and they will provide you a userKey and an apiKey<li>The apiKey is an alphanumeric string associated to the couple User-Workspace<li>Use the userKey as username and the apikey as password to set the Basic Authorization (Authorize button) and call any other APIs</ul>
+    description: <ul><li>The steps to create a new User are<ol><li>register a new User (POST /user)<li>confirm the registration of the User (PUT /user/{userKey}/{confirmationCode})</ol><li>When a User is created, a new Workspace  (see next section) is also automatically created and associated to the User<li>The registration and confirmation APIs can be called without any authorization and they will provide you a userKey and an apiKey<li>The apiKey is an alphanumeric string associated to the couple User-Workspace<li>Use the userKey as username and the apikey as password to set the Basic Authorization (Authorize button) and call any other APIs</ul>
   - name: Workspace
-    description: <ul><li>A Workspace is the repository where all the media items, videos audios and images are saved<li>A User can create more Workspaces to have a logical separation of the media items<li>A User will have one apiKey for each Workspace<li>The apiKey is used as password into authorization, so every API acts on one Workspace specified by the apiKey/authorization<li>A Workspace can also be shared with another User, so both are able to work with the same media items</ul>
+    description: <img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/User-Workspace.png" alt="User Workspace"><ul><li>A Workspace is the repository where all the media items, videos audios and images are saved<li>A User can create more Workspaces to have a logical separation of the media items<li>A User will have one apiKey for each Workspace<li>The apiKey is used as password into authorization, so every API acts on one Workspace specified by the apiKey/authorization<li>A Workspace can also be shared with another User, so both are able to work with the same media items</ul>
   - name: mediaItems
     description: <ul><li>A media item<ul><li>can be a video, an audio or an image<li>can have any number of variants (multi bit rate, multi resolutions, ...)<li>can have one number of tags<li>can be published based on the startPublishing and endPublishing metadata<li>can have any custom metadata using a json format<li>has a retention and. if expired, is automatically removed<li>can have a reference to another media item. For example a video can have a reference 'CutOfVideo' towards the original video used for the cut. The actual Cross Reference Types are<ul><li>ImageOfVideo<li>VideoOfImage<li>ImageOfAudio<li>AudioOfImage<li>FaceOfVideo<li>CutOfVideo<li>CutOfAudio</ul></ul>
   - name: delivery
@@ -25,21 +25,21 @@ tags:
   - name: workflow
     description: <img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/WorkflowEditor.png" alt="Workflow Editor"><ul><li>A workflow is a sequence of Tasks involved in moving from the beginning to the end of a working process<li>A Task inherits by default as input the output of his parent. For example, if we have a Concat task and, on success, the Encode task, the Encode Task will inherit authomatically the 'concatenated' media item  output of his parent Concat Task<li>A Task can be executed based on the status of his parent Task. Possible status are<ul><li>onSuccess<li>onFailure<li>onComplete</ul><li>Here follows the Tasks defined by the MMS platform in alphabetical order<ul><li><b>Add-Content</b>, it adds a new content into the MMS Workspace. It supports two options<ul><li><b>pull</b>, the binary of the content is downloaded by the MMS through a url provided by the User. Protocols supported are http, https, ftp, ftps<li><b>push</b>, the binary of the content is uploaded calling the appropriate API</ul><li><b>Awaiting-The-Beginning</b>, it generates a live video based on a Picture provided as input and showes the picture with a countdown up to the beginning of the event. The live video can be delivered to a CDN or through a live HLS format<li><b>Change-File-Format</b>, it generates a new media item having the new format. No re-encoding is done, just change the format/container<li><b>Check-Streaming</b>, it verifies if the streaming specified by a URL provided as input is working<li><b>Concat-Demuxer</b>, it generates a new media item as concatenation of videos having same codecs<li><b>Cut</b>, it generates a new media item as cut of a video-audio<li><b>Encode</b>, it generates one or more new variants of an existing media item using a profile or set of profiles provided as input<li><b>Extract-Tracks</b>, it generates a new media item with the extraction of tracks of a media item provided as input<li><b>Email-Notification</b>, it sends an email<li><b>Face-Identification</b>, it generates a new video (an avi video using h264 as codec without audio) that it is a copy of the provided input video where all the faces are highlighted with a circle or a rectangle having the name of the identified face. it receives a list of tags to be used as filter to select images inside the MMS to be used to train the deep learned model to identify the face inside a video<li><b>Face-Recognition</b>, it receives a video as input and generates, depending on the Output parameter<ul><li>another video (an avi video using h264 as codec without audio) that it is a copy of the input video where all the faces are highlighed with a circle or a rectangle<li>an image for each face met inside the input video. All these ingested images could be used to train the deep learned model to identify (so not just recognize) the face inside a video. In this scenario, it is possible to tag all the images ingested and use them in the FaceIdentification Task to identify the faces</ul><li><b>Frame</b>, it generates a jpg image that it is a Frame from a video<li><b>FTP-Delivery</b>, it uploads the media item on a ftp site<li><b>GroupOfTasks</b>, it is a special Task used when the Workflow has to execute a list of Tasks in parallel or sequentially<li><b>HTTP-Callback</b>, it calls an HTTP, any HTTP method, defined by the Task parameters<li><b>I-Frames</b>, it generates all the I-Frames of a video and add them into MMS<li><b>Intro-Outro-Overlay</b>, it generates a video that is the composition of the intro, main and outro videos<img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/TASK_39_Intro_Outro_Overlay.png" alt="Intro_Outro_Overlay"/><ul><li>The last part of the intro video is overlayed with the initial part of the main video<li>The initial part of the outro video is overlayed with the last part of the main video<li>Generally the intro and outro videos have an alpha component (transparency) that is used during the overlay. This is used to implement a 'transition' from the intro video to the main video and from the main video to the outro video<li>The intro and outro videos may contain an alpha component to be transparent during the overlay with the main video<li>This task will mute (default behavior) the audio of the intro and outro videos during the overlay</ul><li><b>Live-Cut</b>, it generates a video as a cut from a live feed. In order to make the Live-Cut working fine, it is supposed that a Live-Recorder task is or has been active on the same live feed. Internally, the Live-Cut Task generates a new Workflow to concatenate all the chunks needed and then performs a cut generating a new Media Item<li><b>Live-Grid</b>, it receives a list of live streaming as input and generates one live content as output that it is a composition of the input live streaming. The new output live streaming can be delivered using the HLS protocol<li><b>Live-Proxy</b>, it gets a live feed as input and proxy it to a CDN or generates a live content that is able to be delivered as an HLS format<li><b>Live-Recorder</b>, it records a live feed and generates periodically chunks (media items) of a specified duration (i.e. 60 seconds). The same feed can be provided as output to several destination<li><b>Local-Copy</b>, it is used for custom use cases<li><b>Media-Cross-Reference</b>, it generates a cross reference between two media items. It is a kind of link between two media items. For example, a link could be 'imageOfVideo' to join a video and his image/thumbnail. The Cross Reference allows you to navigate from one video to another<li><b>Motion-JPEG-by-I-Frames</b>, it generates a Motion JPEG video by the I-Frames of the video<li><b>Motion-JPEG-by-Periodical-Frames</b>, it generates a Motion JPEG video by periodical Frames of the video<li><b>Overlay-Image-On-Video</b>, it generates a video overlaying an Image on top of a video both provided as input<li><b>Overlay-Text-On-Video</b>, it generates a video overlaying a text on top of a video both provided as input<li><b>Periodical-Frames</b>, it generates periodical frames from a video provided as input<li><b>Picture-In-Picture</b>, it generates a video overlaing a video on another video both received as input<li><b>Post-On-Facebook</b>, it Post a media item on Facebook<li><b>Post-On-YouTube</b>, it Post a media item on YouTube<li><b>Remove-Content</b>, it removes one or more media items from MMS<li><b>Slideshow</b>, it generates a Slideshow video (mp4 file) using images media items provided as input<li><b>Video-Speed</b>, it generates a new video speeding up or slowing down a provided input video<li><b>VOD-Proxy</b>, it generates a live content starting from one or more VODs media items. The live content can be proxied to a CDN or delivered it through a live HLS delivery</ul></ul>
   - name: encoding
-    description: encoding Jobs, ...
+    description: <ul><li>An EncodingJob is an activity that has to be done by the Encoder, i.e. an encoding of a video or the generation of a SlideShow video, ...<li>Each EncodingJob has a Priority field used to determine the execution order<li>Next APIs will allow you<ul><li>to know all the running EncodingJobs based on all the Encoders or on a specific Encoder<li>to know the EncodingJobs that are in the queue waiting a free Encoder to be executed<li>to kill a running EncodingJob<li>to cancel an EncodingJob from the queue<li>to change the Priority of an EncodingJob<li>to execute again the encoding</ul></ul>
   - name: workflowAsLibrary
-    description: libraries of workflow
+    description: <ul><li>A 'Workflow As Library' is a Workflow that is registered into MMS and can be used as an Elementary Task in another Workflow<li>Let s explain it doing an example<ul><li>assume we have a Workflow retrieving the best Picture from a video<li>this workflow is composed by several Tasks<ul><li>a Task looking for Faces into the Video<li>if it does not find any face (OnError event), there is another Task getting a Picture at a specified instance (i.e. 30 seconds since the starting of the Video)<li>then we have the encoding of the Picture<li>and so on</ul><li>let s call this Workflow as 'Best Picture Of a Video'<li>now, let s assume we have another Workflow registering a live feed and generating a chunk (video media item) every 60 seconds<li>we want to have a picture for every chunk generated during the registration<li>to achieve this, we will register the 'Best Picture Of a Video' Workflow into the MMS as 'Workflow As Library'<li>then we use it into the new Workflow as we usually do with any Elementary Task</ul>
   - name: encodingProfiles
-    description: creation, update, ...
+    description: <ul><li>A media item (video, audio or image) can be encoded using one or more profiles<li>There are several Predefined Encoding Profiles defined by the MMS system, however a User can define new encoding profiles<li>It is possible to add a single encoding profile as well as a set of profiles and apply the entire set of profiles to one content using just one Task</ul>
   - name: channels
-    description: IP/SAT channels configuration, ...
+    description: <ul><li>A channel represents a live feed<li>A property of the channel is 'sourceType' that identifies the type of the channel<ul><li>IP_PULL, the live feed is retrieved by the MMS through a URL (srt, rtmp, http, ...). In this scenario MMS is a client and the host of the URL is a server<li>IP_PUSH, the live feed is pushed to the MMS that is listenning on a specified IP/Port. In this scenario MMS is a server and the host pushing the live feed is the client<li>CaptureLive, the MMS retrieve the live feed through a Capture device (capture card, HDMI, ...)<li>Satellite, the MMS retrieve the feed from the satellite</ul><li>A channel can have any custom metadata using a json format</ul>
   - name: social
-    description: youTube/facebook account/configuration, ...
+    description: <ul><li>Social configuration contains the minimal data needed to MMS to post vod/live contents to YouTube or Facebook<li>The social configuration is used by the Post-On-Facebook or Post-On-YouTube Task</ul>
   - name: ftp
-    description: FTP configuration, ...
+    description: <ul><li>FTP configuration contains FTP accounts details to allow MMS to copy a contents to an FTP server. For example, inside the Workflow, on success of an encoding, the encoded file has to be copied to an FTP server<li>The FTP configuration is used by the FTP-Delivery Task</ul>
   - name: email
-    description: EMAIL configuration, ...
+    description: <ul><li>Email configuration contains email details to allow MMS to send email. For example, inside the Workflow, on failure of a Task you could send an email to inform the support team of this failure<li>The Email configuration is used by the Email-Notification Task</ul>
   - name: encoder
-    description: add new encoders, encoders pool, ...
+    description: <ul><li>This section contains APIs to add/remove encoders to the MMS platform and associate them to workspaces. Most of this APIs require the 'admin' priviledge<li>This section contains also encodersPool APIs, they are used to group encoders. These APIs do not need the 'admin' priviledge to be executed<li>The EncodersPool can be specified inside the Task and, in this case, the MMS will perform a balancing among all the encoders included into the EncodersPool</ul>
 security: 
   - BasicAuth: []
 paths:
@@ -48,7 +48,7 @@ paths:
       security: []
       tags:
         - MMS User
-      summary: login into the MMS platform. The apiKey is returned
+      summary: return the apiKey in case the email and password input is correct
       operationId: login
       description: This API allows the User to login into the MMS platform.
         As input User and password, the output will be the api-key
@@ -72,16 +72,16 @@ paths:
             schema:
               type: object
               required:
-                - EMail
-                - Password
+                - email
+                - password
               properties:
-                EMail:
+                email:
                   type: string
                   example: anthony@companyName.com
-                Password:
+                password:
                   type: string
                   example: k9wo39lksh
-                RemoteClientIPAddress:
+                remoteClientIPAddress:
                   type: string
                   description: in case this field is present, MMS register the client IP |
                     used by the User
@@ -107,19 +107,16 @@ paths:
                   type: object
                   required:
                     - userKey
-                    - workspaceKey
                     - confirmationCode
                   properties:
                     userKey:
                       type: integer
                       format: int64
                       example: 123
-                    workspaceKey:
-                      type: integer
-                      format: int64
-                      example: 824
+                      description: please remember his value because it will be the 'user' of the HTTP basic authentication
                     confirmationCode:
                       type: string
+                      description: please remember his value because it will be used to confirm the registration
         '400':
           description: 'Json field is not present or it is null'
         '500':
@@ -153,26 +150,10 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              items:
-                type: object
-                required:
-                  - Name
-                  - EMail
-                  - Country
-                properties:
-                  Name:
-                    type: string
-                    example: Anthony
-                  EMail:
-                    type: string
-                    example: anthony@companyName.com
-                  Country:
-                    type: string
-                    example: Italy
+              $ref: '#/components/schemas/UserUpdate'
         description: 'User fields to be updated'
   /user/{userKey}/{confirmationCode}:
-    get:
+    put:
       security: []
       tags:
         - MMS User
@@ -199,13 +180,11 @@ paths:
               schema:
                 type: object
                 required:
-                  - status
                   - apiKey
                 properties:
-                  status:
-                    type: string
                   apiKey:
                     type: string
+                    description: please remember his value because it will be the 'password' of the HTTP basic authentication
         '500':
           description: internal server error
   /status:
@@ -3221,13 +3200,13 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /conf/ipChannel:
+  /conf/channel:
     get:
       tags:
         - channels
-      summary: list all IP channels configuration
-      operationId: listIPChannelsConfiguration
-      description: list all IP channels configuration
+      summary: list all channels configuration
+      operationId: listChannelsConfiguration
+      description: list all channels configuration
       parameters:
         - in: query
           name: start
@@ -3279,7 +3258,7 @@ paths:
             enum: [asc, desc]
       responses:
         '200':
-          description: ip channel configuration details
+          description: channel configuration details
           content:
             application/json:
               schema:
@@ -3303,7 +3282,7 @@ paths:
                         channelConf:
                           type: array
                           items:
-                            $ref: '#/components/schemas/IPChannelConf'
+                            $ref: '#/components/schemas/ChannelConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3311,24 +3290,16 @@ paths:
     post:
       tags:
         - channels
-      summary: add an IP channel configuration
-      operationId: addIPChannelConfiguration
-      description: add an IP channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+      summary: add a channel configuration
+      operationId: addChannelConfiguration
+      description: add a channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
       responses:
         '201':
-          description: ip channel configuration details
+          description: channel configuration details
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
+                $ref: '#/components/schemas/ChannelConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3337,233 +3308,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IPChannelConf'
+              $ref: '#/components/schemas/ChannelConf'
         description: 'ip channel configuration details'
-  /conf/ipChannel/{confKey}:
+  /conf/channel/{confKey}:
     get:
       tags:
         - channels
-      summary: get the IP channel configuration
-      operationId: ipChannelConfiguration
-      description: get the IP channel configuration
-      parameters:
-        - in: path
-          name: confKey
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: ip channel configuration details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    # - requestParameters
-                    - response
-                  properties:
-                    # requestParameters:
-                    response:
-                      type: object
-                      required:
-                        - numFound
-                        - channelConf
-                      properties:
-                        numFound:
-                          type: integer
-                          format: int32
-                        channelConf:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/IPChannelConf'
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-    put:
-      tags:
-        - channels
-      summary: update an IP channel configuration
-      operationId: modifyIPChannelConfiguration
-      description: update an IP channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
-      parameters:
-        - in: path
-          name: confKey
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: ip channel configuration details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/IPChannelConf'
-        description: 'ip channel configuration details'
-    delete:
-      tags:
-        - channels
-      summary: delete an IP channel configuration
-      operationId: deleteIPChannelConfiguration
-      description: delete an IP channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
-      parameters:
-        - in: path
-          name: confKey
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        '200':
-          description: ip channel configuration details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-  /conf/satChannel:
-    get:
-      tags:
-        - channels
-      summary: list all SAT channels configuration
-      operationId: listSATChannelsConfiguration
-      description: list all SAT channels configuration
-      parameters:
-        - in: query
-          name: start
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - in: query
-          name: rows
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - in: query
-          name: label
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: region
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: country
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: labelOrder
-          required: false
-          schema:
-            type: string
-            enum: [asc, desc]
-      responses:
-        '200':
-          description: SAT channel configuration details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    # - requestParameters
-                    - response
-                  properties:
-                    # requestParameters:
-                    response:
-                      type: object
-                      required:
-                        - numFound
-                        - channelConf
-                      properties:
-                        numFound:
-                          type: integer
-                          format: int32
-                        channelConf:
-                          type: array
-                          items:
-                            $ref: '#/components/schemas/SATChannelConf'
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-    post:
-      tags:
-        - channels
-      summary: add a SAT channel configuration
-      operationId: addSATChannelConfiguration
-      description: add a SAT channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
-      responses:
-        '201':
-          description: SAT channel configuration details
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
-        '401':
-          description: 'wrong basic authentication'
-        '500':
-          description: 'internal server error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SATChannelConf'
-        description: 'SAT channel configuration details'
-  /conf/satChannel/{confKey}:
-    get:
-      tags:
-        - channels
-      summary: get the SAT channel configuration
-      operationId: satChannelConfiguration
-      description: get the SAT channel configuration
+      summary: get the channel configuration
+      operationId: channelConfiguration
+      description: get the channel configuration
       parameters:
         - in: path
           name: confKey
@@ -3597,7 +3350,7 @@ paths:
                         channelConf:
                           type: array
                           items:
-                            $ref: '#/components/schemas/SATChannelConf'
+                            $ref: '#/components/schemas/ChannelConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3605,9 +3358,9 @@ paths:
     put:
       tags:
         - channels
-      summary: update a SAT channel configuration
-      operationId: modifySATChannelConfiguration
-      description: update a SAT channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+      summary: update an channel configuration
+      operationId: modifyChannelConfiguration
+      description: update an channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3617,19 +3370,11 @@ paths:
             format: int64
       responses:
         '200':
-          description: SAT channel configuration details
+          description: ip channel configuration details
           content:
             application/json:
               schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
+                $ref: '#/components/schemas/ChannelConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3638,14 +3383,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SATChannelConf'
-        description: 'SAT channel configuration details'
+              $ref: '#/components/schemas/ChannelConf'
+        description: 'ip channel configuration details'
     delete:
       tags:
         - channels
-      summary: delete a SAT channel configuration
-      operationId: deleteSATChannelConfiguration
-      description: delete a SAT channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+      summary: delete an channel configuration
+      operationId: deleteChannelConfiguration
+      description: delete a channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3655,7 +3400,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: SAT channel configuration details
+          description: channel configuration details
           content:
             application/json:
               schema:
@@ -4316,6 +4061,78 @@ components:
         durationInMilliSeconds:
           type: integer
           format: int64
+    ChannelConf:
+      type: object
+      required:
+        - label
+        - sourceType
+      properties:
+        confKey:
+          type: integer
+          format: int64
+        label:
+          type: string
+        sourceType:
+          type: string
+          enum: [IP_PULL, IP_PUSH, Satellite, CaptureLive]
+        url:
+          type: string
+        pushProtocol:
+          type: string
+        pushServerName:
+          type: string
+        pushServerPort:
+          type: integer
+          format: int32
+        pushUri:
+          type: string
+        pushListenTimeout:
+          type: integer
+          format: int32
+        captureVideoDeviceNumber:
+          type: integer
+          format: int32
+        captureVideoInputFormat:
+          type: string
+        captureFrameRate:
+          type: integer
+          format: int32
+        captureWidth:
+          type: integer
+          format: int32
+        captureHeight:
+          type: integer
+          format: int32
+        captureAudioDeviceNumber:
+          type: integer
+          format: int32
+        captureChannelsNumber:
+          type: integer
+          format: int32
+        satSourceSATConfKey:
+          type: integer
+          format: int64
+        type:
+          type: string
+        description:
+          type: string
+        name:
+          type: string
+        region:
+          type: string
+        country:
+          type: string
+        imageMediaItemKey:
+          type: integer
+          format: int64
+        imageUniqueName:
+          type: string
+        position:
+          type: integer
+          format: int32
+        channelData:
+          type: object
+          additionalProperties: {}
     CrossReference:
       type: object
       required:
@@ -4784,50 +4601,6 @@ components:
           format: int64
         label:
           type: string
-    IPChannelConf:
-      type: object
-      required:
-        - confKey
-        - label
-        - url
-        - type
-        - description
-        - name
-        - region
-        - country
-        - imageMediaItemKey
-        - imageUniqueName
-        - position
-        - channelData
-      properties:
-        confKey:
-          type: integer
-          format: int64
-        label:
-          type: string
-        url:
-          type: string
-        type:
-          type: string
-        description:
-          type: string
-        name:
-          type: string
-        region:
-          type: string
-        country:
-          type: string
-        imageMediaItemKey:
-          type: integer
-          format: int64
-        imageUniqueName:
-          type: string
-        position:
-          type: integer
-          format: int32
-        channelData:
-          type: object
-          additionalProperties: {}
     MediaItem:
       type: object
       required:
@@ -4961,42 +4734,6 @@ components:
           type: string
           format: date-time
           example: '2021-04-08T20:28:33Z'
-    SATChannelConf:
-      type: object
-      required:
-        - confKey
-        - sourceSATConfKey
-        - label
-        - region
-        - country
-        - imageMediaItemKey
-        - imageUniqueName
-        - position
-        - channelData
-      properties:
-        confKey:
-          type: integer
-          format: int64
-        sourceSATConfKey:
-          type: integer
-          format: int64
-        label:
-          type: string
-        region:
-          type: string
-        country:
-          type: string
-        imageMediaItemKey:
-          type: integer
-          format: int64
-        imageUniqueName:
-          type: string
-        position:
-          type: integer
-          format: int32
-        channelData:
-          type: object
-          additionalProperties: {}
     SourceSATChannelConf:
       type: object
       required:
@@ -5081,29 +4818,40 @@ components:
         Text:
           type: string
           example: 'The Proxy task fails woth the following error: .....'
-    UserRegistration:
+    User:
       type: object
       required:
-        - EMail
-        - Password
+        - userKey
+        - name
+        - email
+        - country
+        - ldapEnabled
+        - creationDate
+        - expirationDate
       properties:
-        EMail:
-          type: string
-          example: anthony@companyName.com
-        Password:
-          type: string
-          example: 19264hd93h
-        Name:
+        userKey:
+          type: integer
+          format: int64
+        name:
           type: string
           example: Anthony
-        WorkspaceName:
+        email:
           type: string
-          description: name of the default Workspace associated to the User. If not provided
-            it is set with the 'Name' of the User if present adn, if not present, it is set
-            with the 'EMail' of the User.
-        Country:
+          example: anthony@companyName.com
+        country:
           type: string
           example: Italy
+        ldapEnabled:
+          type: boolean
+          example: false
+        creationDate:
+          type: string
+          format: date-time
+          example: '2021-04-08T20:28:33Z'
+        expirationDate:
+          type: string
+          format: date-time
+          example: '2031-04-06T20:06:39Z'
     UserAndWorkspace:
       type: object
       required:
@@ -5143,42 +4891,6 @@ components:
           example: false
         workspace:
           $ref: '#/components/schemas/Workspace'
-    User:
-      type: object
-      required:
-        - name
-        - userKey
-        - eMailAddress
-        - country
-        - creationDate
-        - expirationDate
-        - ldapEnabled
-      properties:
-        name:
-          type: string
-          example: Anthony
-        userKey:
-          type: integer
-          format: int64
-          example: 1
-        eMailAddress:
-          type: string
-          format: email
-          example: anthony@companyName.com
-        country:
-          type: string
-          example: Italy
-        creationDate:
-          type: string
-          format: date-time
-          example: '2021-04-08T20:28:33Z'
-        expirationDate:
-          type: string
-          format: date-time
-          example: '2031-04-06T20:06:39Z'
-        ldapEnabled:
-          type: boolean
-          example: false
     UserAPIKey:
       type: object
       required:
@@ -5248,6 +4960,48 @@ components:
         shareWorkspace:
           type: boolean
           example: true
+    UserRegistration:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: anthony@companyName.com
+        password:
+          type: string
+          example: 19264hd93h
+        name:
+          type: string
+          example: Anthony
+        workspaceName:
+          type: string
+          example: sport videos
+          description: name of the default Workspace associated to the User. If not provided
+            it is set with the 'Name' of the User if present adn, if not present, it is set
+            with the 'EMail' of the User.
+        country:
+          type: string
+          example: Italy
+    UserUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Anthony
+        email:
+          type: string
+          example: anthony@companyName.com
+        country:
+          type: string
+          example: Italy
+        newPassword:
+          type: string
+          example: 19264hd93h
+        oldPassword:
+          type: string
+          example: 19264hd93h
     VideoTrack:
       type: object
       required:
