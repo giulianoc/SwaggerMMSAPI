@@ -17,7 +17,7 @@ tags:
   - name: MMS User
     description: <ul><li>The steps to create a new User are<ol><li>register a new User (POST /user)<li>confirm the registration of the User (PUT /user/{userKey}/{confirmationCode})</ol><li>When a User is created, a new Workspace  (see next section) is also automatically created and associated to the User<li>The registration and confirmation APIs can be called without any authorization and they will provide you a userKey and an apiKey<li>The apiKey is an alphanumeric string associated to the couple User-Workspace<li>Use the userKey as username and the apikey as password to set the Basic Authorization (Authorize button) and call any other APIs</ul>
   - name: Workspace
-    description: <img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/User-Workspace.png" alt="User Workspace"><ul><li>A Workspace is the repository where all the media items, videos audios and images are saved<li>A User can create more Workspaces to have a logical separation of the media items<li>A User will have one apiKey for each Workspace<li>The apiKey is used as password into authorization, so every API acts on one Workspace specified by the apiKey/authorization<li>A Workspace can also be shared with another User, so both are able to work with the same media items</ul>
+    description: <img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/User-Workspace.png" alt="User Workspace"><ul><li>A Workspace is the repository where all the media items, videos audios and images are saved<li>A User can create more Workspaces to have a logical separation of the media items<li>A User will have one apiKey for each Workspace<li>The apiKey is used as password into the authorization, so every API acts on one Workspace specified by the apiKey/authorization<li>A Workspace can also be shared with another User, so both are able to work with the same media items</ul>
   - name: mediaItems
     description: <ul><li>A media item<ul><li>can be a video, an audio or an image<li>can have any number of variants (multi bit rate, multi resolutions, ...)<li>can have one number of tags<li>can be published based on the startPublishing and endPublishing metadata<li>can have any custom metadata using a json format<li>has a retention and. if expired, is automatically removed<li>can have a reference to another media item. For example a video can have a reference 'CutOfVideo' towards the original video used for the cut. The actual Cross Reference Types are<ul><li>ImageOfVideo<li>VideoOfImage<li>ImageOfAudio<li>AudioOfImage<li>FaceOfVideo<li>CutOfVideo<li>CutOfAudio</ul></ul>
   - name: delivery
@@ -43,50 +43,6 @@ tags:
 security: 
   - BasicAuth: []
 paths:
-  /login:
-    post:
-      security: []
-      tags:
-        - MMS User
-      summary: return the apiKey in case the email and password input is correct
-      operationId: login
-      description: This API allows the User to login into the MMS platform.
-        As input User and password, the output will be the api-key
-        associated to the User default Workspace
-      responses:
-        '200':
-          description: login done successful
-          content:
-            application/json:
-              schema:
-                type: object
-                items:
-                  $ref: '#/components/schemas/UserAndWorkspace'
-        '400':
-          description: 'Json field is not present or it is null'
-        '500':
-          description: 'internal server error'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              required:
-                - email
-                - password
-              properties:
-                email:
-                  type: string
-                  example: anthony@companyName.com
-                password:
-                  type: string
-                  example: k9wo39lksh
-                remoteClientIPAddress:
-                  type: string
-                  description: in case this field is present, MMS register the client IP |
-                    used by the User
-                  example: 111.222.333.444
-        description: 'User details'
   /user:
     post:
       security: []
@@ -187,6 +143,50 @@ paths:
                     description: please remember his value because it will be the 'password' of the HTTP basic authentication
         '500':
           description: internal server error
+  /login:
+    post:
+      security: []
+      tags:
+        - MMS User
+      summary: receive email and password as input and return the apiKey in case the email and password are correct (used generally in case of a generic GUI client)
+      operationId: login
+      description: This API allows the User to login into the MMS platform.
+        As input User and password, the output will be the api-key
+        associated to the User default Workspace
+      responses:
+        '200':
+          description: login done successful
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  $ref: '#/components/schemas/UserAndWorkspace'
+        '400':
+          description: 'Json field is not present or it is null'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  example: anthony@companyName.com
+                password:
+                  type: string
+                  example: k9wo39lksh
+                remoteClientIPAddress:
+                  type: string
+                  description: in case this field is present, MMS register the client IP |
+                    used by the User
+                  example: 111.222.333.444
+        description: 'User details'
   /status:
     get:
       security: []
@@ -238,7 +238,7 @@ paths:
     get:
       tags:
         - Workspace
-      summary: list all the Workspaces of a User, own and shared Workspaces
+      summary: list all the Workspaces of the User, own and shared Workspaces
       operationId: workspaceList
       description: list all the Workspaces of a User, own and shared Workspaces
       responses:
@@ -278,6 +278,12 @@ paths:
       summary: create a new Workspace
       operationId: registerWorkspace
       description: This API registers a new Workspace into the MMS platform. It can be executed only by a User having the createRemoveWorkspace or admin priviledge
+      parameters:
+        - in: query
+          name: workspaceName
+          required: true
+          schema:
+            type: string
       responses:
         '201':
           description: Workspace created successful
@@ -288,12 +294,17 @@ paths:
                 items:
                   type: object
                   required:
-                    - workspaceKey
+                    - userKey
+                    - confirmationCode
                   properties:
-                    workspaceKey:
+                    userKey:
                       type: integer
                       format: int64
-                      example: 824
+                      example: 123
+                      description: please remember his value because it will be the 'user' of the HTTP basic authentication
+                    confirmationCode:
+                      type: string
+                      description: please remember his value because it will be used to confirm the registration
         '400':
           description: 'Json field is not present or it is null'
         '401':
@@ -308,9 +319,9 @@ paths:
               items:
                 type: object
                 required:
-                  - WorkspaceName
+                  - workspaceName
                 properties:
-                  WorkspaceName:
+                  workspaceName:
                     type: string
                     example: news video
         description: 'Workspace details'
@@ -5132,6 +5143,8 @@ components:
     Workspace:
       type: object
       required:
+        - workspaceKey
+        - workspaceName
         - creationDate
         - isEnabled
         - languageCode
@@ -5139,8 +5152,14 @@ components:
         - maxEncodingPriority
         - maxIngestionsNumber
         - encodingPeriod
+        - workSpaceUsageInMB
         - userAPIKey
       properties:
+        workspaceKey:
+          type: integer
+          format: int64
+        workspaceName:
+          type: string
         creationDate:
           type: string
           format: date-time
@@ -5165,6 +5184,9 @@ components:
         encodingPeriod:
           type: string
           example: Daily
+        workSpaceUsageInMB:
+          type: integer
+          format: int64
         userAPIKey:
           $ref: '#/components/schemas/UserAPIKey'
     YouTubeConf:
