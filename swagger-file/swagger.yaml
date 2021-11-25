@@ -23,7 +23,7 @@ tags:
   - name: delivery
     description: <ul><li>A media item or a live content can be delivered only if it is authorized<li>The APIs in this section allow you to create an authorization for the specified media items and provides you a 'tokenized' URL for the delivery</ul>
   - name: workflow
-    description: <img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/WorkflowEditor.png" alt="Workflow Editor"><ul><li>A workflow is a sequence of Tasks involved in moving from the beginning to the end of a working process<li>A Task inherits by default as input the output of his parent. For example, if we have a Concat task and, on success, the Encode task, the Encode Task will inherit authomatically the 'concatenated' media item  output of his parent Concat Task<li>A Task can be executed based on the status of his parent Task. Possible status are<ul><li>onSuccess<li>onFailure<li>onComplete</ul><li>Here follows the Tasks defined by the MMS platform in alphabetical order<ul><li><b>Add-Content</b>, it adds a new content into the MMS Workspace. It supports two options<ul><li><b>pull</b>, the binary of the content is downloaded by the MMS through a url provided by the User. Protocols supported are http, https, ftp, ftps<li><b>push</b>, the binary of the content is uploaded calling the appropriate API</ul><li><b>Awaiting-The-Beginning</b>, it generates a live video based on a Picture provided as input and showes the picture with a countdown up to the beginning of the event. The live video can be delivered to a CDN or through a live HLS format<li><b>Change-File-Format</b>, it generates a new media item having the new format. No re-encoding is done, just change the format/container<li><b>Check-Streaming</b>, it verifies if the streaming specified by a URL provided as input is working<li><b>Concat-Demuxer</b>, it generates a new media item as concatenation of videos having same codecs<li><b>Cut</b>, it generates a new media item as cut of a video-audio<li><b>Encode</b>, it generates one or more new variants of an existing media item using a profile or set of profiles provided as input<li><b>Extract-Tracks</b>, it generates a new media item with the extraction of tracks of a media item provided as input<li><b>Email-Notification</b>, it sends an email<li><b>Face-Identification</b>, it generates a new video (an avi video using h264 as codec without audio) that it is a copy of the provided input video where all the faces are highlighted with a circle or a rectangle having the name of the identified face. it receives a list of tags to be used as filter to select images inside the MMS to be used to train the deep learned model to identify the face inside a video<li><b>Face-Recognition</b>, it receives a video as input and generates, depending on the Output parameter<ul><li>another video (an avi video using h264 as codec without audio) that it is a copy of the input video where all the faces are highlighed with a circle or a rectangle<li>an image for each face met inside the input video. All these ingested images could be used to train the deep learned model to identify (so not just recognize) the face inside a video. In this scenario, it is possible to tag all the images ingested and use them in the FaceIdentification Task to identify the faces</ul><li><b>Frame</b>, it generates a jpg image that it is a Frame from a video<li><b>FTP-Delivery</b>, it uploads the media item on a ftp site<li><b>GroupOfTasks</b>, it is a special Task used when the Workflow has to execute a list of Tasks in parallel or sequentially<li><b>HTTP-Callback</b>, it calls an HTTP, any HTTP method, defined by the Task parameters<li><b>I-Frames</b>, it generates all the I-Frames of a video and add them into MMS<li><b>Intro-Outro-Overlay</b>, it generates a video that is the composition of the intro, main and outro videos<img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/TASK_39_Intro_Outro_Overlay.png" alt="Intro_Outro_Overlay"/><ul><li>The last part of the intro video is overlayed with the initial part of the main video<li>The initial part of the outro video is overlayed with the last part of the main video<li>Generally the intro and outro videos have an alpha component (transparency) that is used during the overlay. This is used to implement a 'transition' from the intro video to the main video and from the main video to the outro video<li>The intro and outro videos may contain an alpha component to be transparent during the overlay with the main video<li>This task will mute (default behavior) the audio of the intro and outro videos during the overlay</ul><li><b>Live-Cut</b>, it generates a video as a cut from a live feed. In order to make the Live-Cut working fine, it is supposed that a Live-Recorder task is or has been active on the same live feed. Internally, the Live-Cut Task generates a new Workflow to concatenate all the chunks needed and then performs a cut generating a new Media Item<li><b>Live-Grid</b>, it receives a list of live streaming as input and generates one live content as output that it is a composition of the input live streaming. The new output live streaming can be delivered using the HLS protocol<li><b>Live-Proxy</b>, it gets a live feed as input and proxy it to a CDN or generates a live content that is able to be delivered as an HLS format<li><b>Live-Recorder</b>, it records a live feed and generates periodically chunks (media items) of a specified duration (i.e. 60 seconds). The same feed can be provided as output to several destination<li><b>Local-Copy</b>, it is used for custom use cases<li><b>Media-Cross-Reference</b>, it generates a cross reference between two media items. It is a kind of link between two media items. For example, a link could be 'imageOfVideo' to join a video and his image/thumbnail. The Cross Reference allows you to navigate from one video to another<li><b>Motion-JPEG-by-I-Frames</b>, it generates a Motion JPEG video by the I-Frames of the video<li><b>Motion-JPEG-by-Periodical-Frames</b>, it generates a Motion JPEG video by periodical Frames of the video<li><b>Overlay-Image-On-Video</b>, it generates a video overlaying an Image on top of a video both provided as input<li><b>Overlay-Text-On-Video</b>, it generates a video overlaying a text on top of a video both provided as input<li><b>Periodical-Frames</b>, it generates periodical frames from a video provided as input<li><b>Picture-In-Picture</b>, it generates a video overlaing a video on another video both received as input<li><b>Post-On-Facebook</b>, it Post a media item on Facebook<li><b>Post-On-YouTube</b>, it Post a media item on YouTube<li><b>Remove-Content</b>, it removes one or more media items from MMS<li><b>Slideshow</b>, it generates a Slideshow video (mp4 file) using images media items provided as input<li><b>Video-Speed</b>, it generates a new video speeding up or slowing down a provided input video<li><b>VOD-Proxy</b>, it generates a live content starting from one or more VODs media items. The live content can be proxied to a CDN or delivered it through a live HLS delivery</ul></ul>
+    description: <img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/WorkflowEditor.png" alt="Workflow Editor"><ul><li>A workflow is a sequence of Tasks involved in moving from the beginning to the end of a working process<li>A Task inherits by default as input the output of his parent. For example, if we have a Concat task and, on success, the Encode task, the Encode Task will inherit authomatically the 'concatenated' media item  output of his parent Concat Task<li>A Task can be executed based on the status of his parent Task. Possible status are<ul><li>onSuccess<li>onFailure<li>onComplete</ul><li>Here follows the Tasks defined by the MMS platform in alphabetical order<ul><li><b>Add-Content</b>, it adds a new content into the MMS Workspace. It supports two options<ul><li><b>pull</b>, the binary of the content is downloaded by the MMS through a url provided by the User. Protocols supported are http, https, ftp, ftps<li><b>push</b>, the binary of the content is uploaded calling the appropriate API</ul><li><b>Awaiting-The-Beginning</b>, it generates a live video based on a Picture provided as input and showes the picture with a countdown up to the beginning of the event. The live video can be delivered to a CDN or through a live HLS format<li><b>Change-File-Format</b>, it generates a new media item having the new format. No re-encoding is done, just change the format/container<li><b>Check-Streaming</b>, it verifies if the streaming specified by a URL provided as input is working<li><b>Concat-Demuxer</b>, it generates a new media item as concatenation of videos having same codecs<li><b>Cut</b>, it generates a new media item as cut of a video-audio<li><b>Encode</b>, it generates one or more new variants of an existing media item using a profile or set of profiles provided as input<li><b>Extract-Tracks</b>, it generates a new media item with the extraction of tracks of a media item provided as input<li><b>Email-Notification</b>, it sends an email<li><b>Face-Identification</b>, it generates a new video (an avi video using h264 as codec without audio) that it is a copy of the provided input video where all the faces are highlighted with a circle or a rectangle having the name of the identified face. it receives a list of tags to be used as filter to select images inside the MMS to be used to train the deep learned model to identify the face inside a video<li><b>Face-Recognition</b>, it receives a video as input and generates, depending on the Output parameter<ul><li>another video (an avi video using h264 as codec without audio) that it is a copy of the input video where all the faces are highlighed with a circle or a rectangle<li>an image for each face met inside the input video. All these ingested images could be used to train the deep learned model to identify (so not just recognize) the face inside a video. In this scenario, it is possible to tag all the images ingested and use them in the FaceIdentification Task to identify the faces</ul><li><b>Frame</b>, it generates a jpg image that it is a Frame from a video<li><b>FTP-Delivery</b>, it uploads the media item on a ftp site<li><b>GroupOfTasks</b>, it is a special Task used when the Workflow has to execute a list of Tasks in parallel or sequentially<li><b>HTTP-Callback</b>, it calls an HTTP, any HTTP method, defined by the Task parameters<li><b>I-Frames</b>, it generates all the I-Frames of a video and add them into MMS<li><b>Intro-Outro-Overlay</b>, it generates a video that is the composition of the intro, main and outro videos<img src="https://github.com/giulianoc/CatraMMS/raw/master/docs/TASK_39_Intro_Outro_Overlay.png" alt="Intro_Outro_Overlay"/><ul><li>The last part of the intro video is overlayed with the initial part of the main video<li>The initial part of the outro video is overlayed with the last part of the main video<li>Generally the intro and outro videos have an alpha component (transparency) that is used during the overlay. This is used to implement a 'transition' from the intro video to the main video and from the main video to the outro video<li>The intro and outro videos may contain an alpha component to be transparent during the overlay with the main video<li>This task will mute (default behavior) the audio of the intro and outro videos during the overlay</ul><li><b>Live-Cut</b>, it generates a video as a cut from a live feed. In order to make the Live-Cut working fine, it is supposed that a Live-Recorder task is or has been active on the same live feed. Internally, the Live-Cut Task generates a new Workflow to concatenate all the chunks needed and then performs a cut generating a new Media Item<li><b>Live-Grid</b>, it receives a list of live streaming as input and generates one live content as output that it is a composition of the input live streaming. The new output live streaming can be delivered using the HLS protocol<li><b>Live-Proxy</b>, it gets a live feed as input and proxy it to a CDN or generates a live content that is able to be delivered as an HLS format<li><b>Live-Recorder</b>, it records a live feed and generates periodically chunks (media items) of a specified duration (i.e. 60 seconds). The same feed can be provided as output to several destination<li><b>Local-Copy</b>, it is used for custom use cases<li><b>Media-Cross-Reference</b>, it generates a cross reference between two media items. It is a kind of link between two media items. For example, a link could be 'imageOfVideo' to join a video and his image/thumbnail. The Cross Reference allows you to navigate from one video to another<li><b>Motion-JPEG-by-I-Frames</b>, it generates a Motion JPEG video by the I-Frames of the video<li><b>Motion-JPEG-by-Periodical-Frames</b>, it generates a Motion JPEG video by periodical Frames of the video<li><b>Overlay-Image-On-Video</b>, it generates a video overlaying an Image on top of a video both provided as input<li><b>Overlay-Text-On-Video</b>, it generates a video overlaying a text on top of a video both provided as input<li><b>Periodical-Frames</b>, it generates periodical frames from a video provided as input<li><b>Picture-In-Picture</b>, it generates a video overlaing a video on another video both received as input<li><b>Post-On-Facebook</b>, it Post a media item on Facebook<li><b>Post-On-YouTube</b>, it Post a media item on YouTube<li><b>Remove-Content</b>, it removes one or more media items from MMS<li><b>Slideshow</b>, it generates a Slideshow video (mp4 file) using images media items provided as input<li><b>Video-Speed</b>, it generates a new video speeding up or slowing down a provided input video<li><b>VOD-Proxy</b>, it generates a live content starting from one or more VODs media items. The live content can be proxied to a CDN or delivered it through a live HLS delivery<li><b>YouTube-Live-Broadcast</b>, it creates a live event on YouTube feeding it with a live feed or a VOD sent continuously (loop)</ul></ul>
   - name: encoding
     description: <ul><li>An EncodingJob is an activity that has to be done by the Encoder, i.e. an encoding of a video or the generation of a SlideShow video, ...<li>Each EncodingJob has a Priority field used to determine the execution order<li>Next APIs will allow you<ul><li>to know all the running EncodingJobs based on all the Encoders or on a specific Encoder<li>to know the EncodingJobs that are in the queue waiting a free Encoder to be executed<li>to kill a running EncodingJob<li>to cancel an EncodingJob from the queue<li>to change the Priority of an EncodingJob<li>to execute again the encoding</ul></ul>
   - name: workflowAsLibrary
@@ -33,7 +33,7 @@ tags:
   - name: channels
     description: <ul><li>A channel represents a live feed<li>A property of the channel is 'sourceType' that identifies the type of the channel<ul><li>IP_PULL, the live feed is retrieved by the MMS through a URL (srt, rtmp, http, ...). In this scenario MMS is a client and the host of the URL is a server<li>IP_PUSH, the live feed is pushed to the MMS that is listenning on a specified IP/Port. In this scenario MMS is a server and the host pushing the live feed is the client<li>CaptureLive, the MMS retrieve the live feed through a Capture device (capture card, HDMI, ...)<li>Satellite, the MMS retrieve the feed from the satellite</ul><li>A channel can have any custom metadata using a json format</ul>
   - name: social
-    description: <ul><li>Social configuration contains the minimal data needed to MMS to post vod/live contents to YouTube or Facebook<li>The social configuration is used by the Post-On-Facebook or Post-On-YouTube Task</ul>
+    description: <ul><li>Social configuration contains the minimal data needed to MMS to post vod/live contents to YouTube or Facebook<li>The social configuration is used by the Post-On-Facebook, Post-On-YouTube and YouTube-Live-Broadcast Tasks</ul>
   - name: ftp
     description: <ul><li>FTP configuration contains FTP accounts details to allow MMS to copy a contents to an FTP server. For example, inside the Workflow, on success of an encoding, the encoded file has to be copied to an FTP server<li>The FTP configuration is used by the FTP-Delivery Task</ul>
   - name: email
@@ -330,8 +330,7 @@ paths:
         - Workspace
       summary: update of a Workspace metadata
       operationId: updateWorkspace
-      description: This API updates the Workspace metadata. Only the owner of the Workspace is able to do the update. Moreover, the isEnabled, expirationDate, maxEncodingPriority, encodingPeriod,
-        maxIngestionsNumber and maxStorageInMB fields can be updated only by admin
+      description: This API updates the Workspace metadata. Only the owner of the Workspace or the admin are able to do the update. Here follows the list of the fields that can be updated<ul><li>workspaceName<li>isEnabled (only admin)<li>languageCode<li>maxStorageInMB (only admin)<li>maxEncodingPriority (only admin)<li>maxIngestionsNumber (only admin)<li>encodingPeriod (only admin)<li>expirationDate (only admin)<li>applicationRecorder<li>cancelIngestionJob<li>createProfiles<li>createRemoveWorkspace<li>deliveryAuthorization<li>editConfiguration<li>editEncodersPool<li>editMedia<li>ingestWorkflow<li>killEncoding<li>shareWorkspace</ul>
       responses:
         '200':
           description: Workspace updated successful
@@ -349,97 +348,13 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              items:
-                type: object
-                required:
-                  - Enabled
-                  - Name
-                  - MaxEncodingPriority
-                  - EncodingPeriod
-                  - MaxIngestionsNumber
-                  - MaxStorageInMB
-                  - LanguageCode
-                  - ExpirationDate
-                  - CreateRemoveWorkspace
-                  - IngestWorkflow
-                  - CreateProfiles
-                  - DeliveryAuthorization
-                  - ShareWorkspace
-                  - EditMedia
-                  - EditConfiguration
-                  - KillEncoding
-                  - CancelIngestionJob
-                  - EditEncodersPool
-                  - ApplicationRecorder
-                properties:
-                  Enabled:
-                    type: boolean
-                    example: true
-                  Name:
-                    type: string
-                    example: News Video
-                  MaxEncodingPriority:
-                    type: string
-                    example: Low
-                  EncodingPeriod:
-                    type: string
-                    example: Daily
-                  MaxIngestionsNumber:
-                    type: integer
-                    format: int64
-                    example: 20000
-                  MaxStorageInMB:
-                    type: integer
-                    format: int64
-                    example: 500000
-                  LanguageCode:
-                    type: string
-                    example: it
-                  ExpirationDate:
-                    type: string
-                    format: date-time
-                    example: '2021-04-08T20:28:33Z'
-                  CreateRemoveWorkspace:
-                    type: boolean
-                    example: true
-                  IngestWorkflow:
-                    type: boolean
-                    example: true
-                  CreateProfiles:
-                    type: boolean
-                    example: true
-                  DeliveryAuthorization:
-                    type: boolean
-                    example: true
-                  ShareWorkspace:
-                    type: boolean
-                    example: true
-                  EditMedia:
-                    type: boolean
-                    example: true
-                  EditConfiguration:
-                    type: boolean
-                    example: true
-                  KillEncoding:
-                    type: boolean
-                    example: true
-                  CancelIngestionJob:
-                    type: boolean
-                    example: true
-                  EditEncodersPool:
-                    type: boolean
-                    example: true
-                  ApplicationRecorder:
-                    type: boolean
-                    example: true
-        description: 'Workspace fields to be updated'
+              $ref: '#/components/schemas/Workspace'
     delete:
       tags:
         - Workspace
       summary: delete the Workspace
       operationId: deleteWorkspace
-      description: delete the Workspace identified by the apikey (http basic authentication password). If the owner does not have any other Workspace, also the User is removed. It can be executed only by a User having the createRemoveWorkspace or admin priviledge.
+      description: delete the Workspace identified by the apikey (http basic authentication password). If the owner will remain without any other Workspace, the User will be automatically removed too. It can be executed only by a User having the createRemoveWorkspace or admin priviledge.
       responses:
         '200':
           description: Workspace deleted successful
@@ -617,10 +532,16 @@ paths:
                   type: object
                   required:
                     - userKey
+                    - confirmationCode
                   properties:
                     userKey:
                       type: integer
                       format: int64
+                      example: 123
+                      description: please remember his value because it will be the 'user' of the HTTP basic authentication
+                    confirmationCode:
+                      type: string
+                      description: please remember his value because it will be used to confirm the registration
         '400':
           description: 'Json field is not present or it is null'
         '401':
@@ -631,28 +552,8 @@ paths:
         content:
           application/json:
             schema:
-                type: object
-                items:
-                  type: object
-                  required:
-                    - EMail
-                  properties:
-                    EMail:
-                      type: string
-                      example: anthony@companyName.com
-                    Password:
-                      type: string
-                      description: this field is 'required' in case userAlreadyPresent is false
-                      example: 19264hd93h
-                    Name:
-                      type: string
-                      description: this field is 'required' in case userAlreadyPresent is false
-                      example: Anthony
-                    Country:
-                      type: string
-                      description: this field is 'required' in case userAlreadyPresent is false
-                      example: Italy
-        description: 'Just the EMail if userAlreadyPresent is true, all the above fields if userAlreadyPresent is false'
+              $ref: '#/components/schemas/UserRegistration'
+        description: Just the 'email' if userAlreadyPresent is true, all the fields but 'workspaceName' if userAlreadyPresent is false
   #/workspace/default/{workspaceKeyToBeSetAsDefault}:
     #put:
       #tags:
@@ -1515,7 +1416,7 @@ paths:
           required: false
           schema:
             type: string
-            enum: [Add-Content, Remove-Content, Encode, Frame, Periodical-Frames, I-Frames, Motion-JPEG-by-Periodical-Frames, Motion-JPEG-by-I-Frames, Slideshow, Concat-Demuxer, Cut, Overlay-Image-On-Video, Overlay-Text-On-Video, FTP-Delivery, HTTP-Callback, Local-Copy, Extract-Tracks, Post-On-Facebook, Post-On-YouTube, Face-Recognition, Face-Identification, Live-Recorder, Change-File-Format, Video-Speed, Picture-In-Picture, Live-Proxy, Live-Cut, Live-Grid, Awaiting-The-Beginning, Intro-Outro-Overlay, VOD-Proxy, Email-Notification, Media-Cross-Reference, Workflow-As-Library, Check-Streaming, ContentUpdate, ContentRemove, GroupOfTasks]
+            enum: [Add-Content, Remove-Content, Encode, Frame, Periodical-Frames, I-Frames, Motion-JPEG-by-Periodical-Frames, Motion-JPEG-by-I-Frames, Slideshow, Concat-Demuxer, Cut, Overlay-Image-On-Video, Overlay-Text-On-Video, FTP-Delivery, HTTP-Callback, Local-Copy, Extract-Tracks, Post-On-Facebook, Post-On-YouTube, Face-Recognition, Face-Identification, Live-Recorder, Change-File-Format, Video-Speed, Picture-In-Picture, Live-Proxy, Live-Cut, Live-Grid, Awaiting-The-Beginning, Intro-Outro-Overlay, VOD-Proxy, Email-Notification, Media-Cross-Reference, Workflow-As-Library, Check-Streaming, ContentUpdate, ContentRemove, GroupOfTasks, YouTube-Live-Broadcast]
         - in: query
           name: asc
           required: false
@@ -2338,8 +2239,7 @@ paths:
           name: tryEncodingAgain
           required: false
           schema:
-            type: string
-            enum: [true, false]
+            type: boolean
       responses:
         '200':
           description: encoding job updated successful
@@ -2943,13 +2843,7 @@ paths:
               schema:
                 type: object
                 items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
+                  $ref: '#/components/schemas/YouTubeConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -2960,15 +2854,7 @@ paths:
             schema:
               type: object
               items:
-                type: object
-                required:
-                  - Label
-                  - RefreshToken
-                properties:
-                  Label:
-                    type: string
-                  RefreshToken:
-                    type: string
+                $ref: '#/components/schemas/YouTubeConf'
         description: 'youTube configuration details'
   /conf/youtube/{confKey}:
     put:
@@ -2992,13 +2878,7 @@ paths:
               schema:
                 type: object
                 items:
-                  type: object
-                  required:
-                    - confKey
-                  properties:
-                    confKey:
-                      type: integer
-                      format: int64
+                  $ref: '#/components/schemas/YouTubeConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3009,15 +2889,7 @@ paths:
             schema:
               type: object
               items:
-                type: object
-                required:
-                  - Label
-                  - RefreshToken
-                properties:
-                  Label:
-                    type: string
-                  RefreshToken:
-                    type: string
+                $ref: '#/components/schemas/YouTubeConf'
         description: 'youTube configuration details'
     delete:
       tags:
@@ -3241,6 +3113,12 @@ paths:
           required: false
           schema:
             type: string
+        - in: query
+          name: sourceType
+          required: false
+          schema:
+            type: string
+            enum: [IP_PULL, IP_PUSH, Satellite, CaptureLive]
         - in: query
           name: type
           required: false
@@ -5194,12 +5072,19 @@ components:
       required:
         - confKey
         - label
+        - tokenType
         - refreshToken
+        - accessToken
       properties:
         confKey:
           type: integer
           format: int64
         label:
           type: string
+        tokenType:
+          type: string
+          enum: [RefreshToken, AccessToken]
         refreshToken:
+          type: string
+        accessToken:
           type: string
