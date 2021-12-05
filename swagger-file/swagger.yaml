@@ -3964,6 +3964,8 @@ components:
         sourceType:
           type: string
           enum: [IP_PULL, IP_PUSH, Satellite, CaptureLive]
+        encodersPool:
+          type: string
         url:
           type: string
         pushProtocol:
