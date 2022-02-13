@@ -1,9 +1,7 @@
 openapi: 3.0.0
 servers:
-  - description: Media Management System on cloud (<b>Public MMS platform, it can be used by anyone</b>)
-    url: https://mms-api.cloud-mms.com/catramms/1.0.1
-  - description: Media Management System used by CiborTV/SerieC (<b>Private MMS platform, no registration is allowed</b>)
-    url: https://mms-api.restream.ovh/catramms/1.0.1
+  - description: Media Management System on cloud (<b>Public MMS platform</b>)
+    url: https://mms-api.mms-cloud-hub.com/catramms/1.0.1
 info:
   description: Media Management System REST API
   version: 1.0.1
