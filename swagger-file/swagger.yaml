@@ -1,7 +1,7 @@
 openapi: 3.0.0
 servers:
   - description: Media Management System on cloud (<b>Public MMS platform</b>)
-    url: https://mms-api.mms-cloud-hub.com/catramms/1.0.1
+    url: https://mms-api.catramms-cloud.com/catramms/1.0.1
 info:
   description: Media Management System REST API
   version: 1.0.1
@@ -643,6 +643,11 @@ paths:
           description: asc or desc
           schema:
             type: string
+        - in: query
+          name: runningInfo
+          required: false
+          schema:
+            type: boolean
         - in: query
           name: allEncoders
           required: false
@@ -1711,7 +1716,7 @@ paths:
         - mediaItems
       summary: list all the media items metadata. It is a POST because the body could contain a filter about the tags
       operationId: listMediaItemsWithTagsFilter
-      description: This API list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags
+      description: This API list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags.
       parameters:
         - in: query
           name: start
@@ -1824,7 +1829,7 @@ paths:
                     type: array
                     items:
                       type: string
-        description: 'optional input filter for tags'
+        description: 'optional input filter for tags. Json format: { "tagsIn": ["xxx", "yyy"], "tagsNotIn": [] }'
   /mediaItem/{mediaItemKey}:
     get:
       tags:
@@ -4046,7 +4051,10 @@ components:
         - label
         - protocol
         - port
-        - serverName
+        - publicServerName
+        - internalServerName
+        - cpuUsage
+        - running
       properties:
         enabled:
           type: boolean
@@ -4067,9 +4075,19 @@ components:
           type: integer
           format: int32
           example: 8088
-        serverName:
+        publicServerName:
           type: string
           example: mms-t-transcoder-fr-1
+        internalServerName:
+          type: string
+          example: mms-t-transcoder-fr-1
+        cpuUsage:
+          type: integer
+          format: int32
+          example: 10
+        running:
+          type: boolean
+          example: true
     EncodersPool:
       type: object
       required:
