@@ -1,13 +1,15 @@
 openapi: 3.0.0
 servers:
-  - description: Media Management System on cloud (<b>Public MMS platform</b>)
+  - description: Media Management System on cloud
     url: https://mms-api.catramms-cloud.com/catramms/1.0.1
+  - description: Media Management System on CiborTV
+    url: https://mms-api.cibortv-mms.com/catramms/1.0.1
 info:
   description: Media Management System REST API
   version: 1.0.1
   title: Media Management Service REST API
   contact:
-    email: mms-technical-support@cloud-mms.com
+    email: support@catramms-cloud.com
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
@@ -30,6 +32,8 @@ tags:
     description: <ul><li>A media item (video, audio or image) can be encoded using one or more profiles<li>There are several Predefined Encoding Profiles defined by the MMS system, however a User can define new encoding profiles<li>It is possible to add a single encoding profile as well as a set of profiles and apply the entire set of profiles to one content using just one Task</ul>
   - name: channels
     description: <ul><li>A channel represents a live feed<li>A property of the channel is 'sourceType' that identifies the type of the channel<ul><li>IP_PULL, the live feed is retrieved by the MMS through a URL (srt, rtmp, http, ...). In this scenario MMS is a client and the host of the URL is a server<li>IP_PUSH, the live feed is pushed to the MMS that is listenning on a specified IP/Port. In this scenario MMS is a server and the host pushing the live feed is the client<li>CaptureLive, the MMS retrieve the live feed through a Capture device (capture card, HDMI, ...)<li>Satellite, the MMS retrieve the feed from the satellite</ul><li>A channel can have any custom metadata using a json format</ul>
+  - name: cdn
+    description: <ul><li>This section describes the APIs to configure a CDN<li>MMS works with several CDNs<ul><li>CDN77<li>AWS</ul></ul>
   - name: social
     description: <ul><li>Social configuration contains the minimal data needed to MMS to post vod/live contents to YouTube or Facebook<li>The social configuration is used by the Post-On-Facebook, Post-On-YouTube and YouTube-Live-Broadcast Tasks</ul>
   - name: ftp
@@ -1617,6 +1621,23 @@ paths:
       description: This API lists media items (contents) meeting the query filter parameters
       parameters:
         - in: query
+          name: mediaItemKey
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: uniqueName
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: physicalPathKey
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
           name: start
           required: false
           schema:
@@ -1628,16 +1649,6 @@ paths:
           schema:
             type: integer
             format: int32
-        - in: query
-          name: title
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: uniqueName
-          required: false
-          schema:
-            type: string
         - in: query
           name: contentType
           required: false
@@ -1663,6 +1674,17 @@ paths:
             type: string
             format: date-time
             example: '2021-04-08T20:28:33Z'
+        - in: query
+          name: title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: recordingCode
+          required: false
+          schema:
+            type: integer
+            format: int32
         - in: query
           name: jsonCondition
           required: false
@@ -1719,6 +1741,23 @@ paths:
       description: This API list media items (contents) meeting the query filter parameters. The body could contain a filter about the tags.
       parameters:
         - in: query
+          name: mediaItemKey
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
+          name: uniqueName
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: physicalPathKey
+          required: false
+          schema:
+            type: integer
+            format: int64
+        - in: query
           name: start
           required: false
           schema:
@@ -1730,16 +1769,6 @@ paths:
           schema:
             type: integer
             format: int32
-        - in: query
-          name: title
-          required: false
-          schema:
-            type: string
-        - in: query
-          name: uniqueName
-          required: false
-          schema:
-            type: string
         - in: query
           name: contentType
           required: false
@@ -1765,6 +1794,17 @@ paths:
             type: string
             format: date-time
             example: '2021-04-08T20:28:33Z'
+        - in: query
+          name: title
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: recordingCode
+          required: false
+          schema:
+            type: integer
+            format: int32
         - in: query
           name: jsonCondition
           required: false
@@ -1829,7 +1869,12 @@ paths:
                     type: array
                     items:
                       type: string
-        description: 'optional input filter for tags. Json format: { "tagsIn": ["xxx", "yyy"], "tagsNotIn": [] }'
+                  otherMediaItemsKey:
+                    type: array
+                    items:
+                      type: integer
+                      format: int64
+        description: 'optional input filter for tags. Json format: { "tagsIn": ["xxx", "yyy"], "tagsNotIn": [], "otherMediaItemsKey": [] }'
   /mediaItem/{mediaItemKey}:
     get:
       tags:
@@ -2035,6 +2080,16 @@ paths:
           schema:
             type: string
             enum: [Video, Audio, Image]
+        - in: query
+          name: tagNameFilter
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: liveRecordingChunk
+          required: false
+          schema:
+            type: boolean
       responses:
         '200':
           description: list tags
@@ -3545,6 +3600,144 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
+  /conf/cdn/cdn77/channel:
+    get:
+      tags:
+        - cdn
+      summary: list all cdn77 configuration
+      operationId: listCDNsConfiguration
+      description: list all cdn77 configuration
+      parameters:
+        - in: query
+          name: label
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: cdn77 configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    # - requestParameters
+                    - response
+                  properties:
+                    # requestParameters:
+                    response:
+                      type: object
+                      required:
+                        - numFound
+                        - cdn77Conf
+                      properties:
+                        numFound:
+                          type: integer
+                          format: int32
+                        channelConf:
+                          type: array
+                          items:
+                            $ref: '#/components/schemas/CDN77Conf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+    post:
+      tags:
+        - cdn
+      summary: add a cdn77 configuration
+      operationId: addCDN77Configuration
+      description: add a cdn77 configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+      responses:
+        '201':
+          description: cdn77 configuration details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CDN77Conf'
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CDN77Conf'
+        description: 'cdn77 configuration details'
+  /conf/cdn/cdn77/{confKey}:
+    put:
+      tags:
+        - cdn
+      summary: update a CDN77 channel configuration
+      operationId: modifyCDN77Configuration
+      description: update a CDN77 channel configuration. It can be executed only by a User having the admin priviledge
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: CDN77 configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CDN77Conf'
+        description: 'CDN77 configuration details'
+    delete:
+      tags:
+        - cdn
+      summary: delete a CDN77 channel configuration
+      operationId: deleteCDN77ChannelConfiguration
+      description: delete a CDN77 channel configuration. It can be executed only by a User having the admin priviledge
+      parameters:
+        - in: path
+          name: confKey
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: CDN77 channel configuration details
+          content:
+            application/json:
+              schema:
+                type: object
+                items:
+                  type: object
+                  required:
+                    - confKey
+                  properties:
+                    confKey:
+                      type: integer
+                      format: int64
+        '401':
+          description: 'wrong basic authentication'
+        '500':
+          description: 'internal server error'
   /conf/ftp:
     get:
       tags:
@@ -3937,22 +4130,55 @@ components:
         trackIndex:
           type: integer
           format: int32
-        codecName:
-          type: string
+        durationInMilliSeconds:
+          type: integer
+          format: int64
         bitRate:
           type: integer
           format: int64
-        channels:
+        codecName:
+          type: string
+        sampleRate:
           type: integer
           format: int32
-        sampleRate:
+        channels:
           type: integer
           format: int32
         language:
           type: string
-        durationInMilliSeconds:
+    CDN77Conf:
+      type: object
+      required:
+        - label
+        - rtmpURL
+        - resourceURL
+        - filePath
+        - type
+      properties:
+        confKey:
           type: integer
           format: int64
+        label:
+          type: string
+        rtmpURL:
+          type: string
+        resourceURL:
+          type: string
+        filePath:
+          type: string
+        secureToken:
+          type: string
+        type:
+          type: string
+          enum: [SHARED, DEDICATED]
+        outputIndex:
+          type: integer
+          format: int32
+        reservedByIngestionJobKey:
+          type: integer
+          format: int64
+        configurationLabel:
+          type: string
     ChannelConf:
       type: object
       required:
@@ -4173,6 +4399,25 @@ components:
         encodingPid:
           type: integer
           format: int64
+    ImageDetail:
+      type: object
+      required:
+        - width
+        - height
+        - format
+        - quality
+      properties:
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        format:
+          type: string
+        quality:
+          type: integer
+          format: int32
     IngestionJob:
       type: object
       required:
@@ -4532,17 +4777,17 @@ components:
           format: int64
         title:
           type: string
-        contentType:
+        deliveryFileName:
           type: string
-          enum: [Video, Audio, Image]
+        ingester:
+          type: string
+        userData:
+          type: object
+          additionalProperties: {}
         ingestionDate:
           type: string
           format: date-time
           example: '2021-04-08T20:28:33Z'
-        physicalPaths:
-          type: array
-          items:
-            $ref: '#/components/schemas/PhysicalPath'
         startPublishing:
           type: string
           format: date-time
@@ -4551,14 +4796,16 @@ components:
           type: string
           format: date-time
           example: '2021-04-08T20:28:33Z'
-        uniqueName:
+        contentType:
           type: string
-        userData:
-          type: object
-          additionalProperties: {}
+          enum: [Video, Audio, Image]
         retentionInMinutes:
           type: integer
           format: int32
+        providerName:
+          type: string
+        uniqueName:
+          type: string
         tags:
           type: array
           items:
@@ -4567,37 +4814,40 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CrossReference'
-        ingester:
-          type: string
-        deliveryFileName:
-          type: string
-        providerName:
-          type: string
+        physicalPaths:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhysicalPath'
     PhysicalPath:
       type: object
       required:
         - physicalPathKey
-        - encodingProfileKey
+        - durationInMilliSeconds
+        - bitRate
         - fileFormat
         - partitionNumber
         - relativePath
         - fileName
+        - externalReadOnlyStorage
+        - externalDeliveryURL
+        - encodingProfileKey
+        - deliveryTechnology
+        - encodingProfileLabel
         - sizeInBytes
+        - creationDate
         - retentionInMinutes
-        - durationInMilliSeconds
-        - bitRate
         - videoTracks
         - audioTracks
-        - deliveryTechnology
+        - imageDetails
         - externalDeliveryTechnology
-        - externalDeliveryURL
-        - externalReadOnlyStorage
-        - creationDate
       properties:
         physicalPathKey:
           type: integer
           format: int64
-        encodingProfileKey:
+        durationInMilliSeconds:
+          type: integer
+          format: int64
+        bitRate:
           type: integer
           format: int64
         fileFormat:
@@ -4609,18 +4859,27 @@ components:
           type: string
         fileName:
           type: string
+        externalReadOnlyStorage:
+          type: boolean
+        externalDeliveryURL:
+          type: string
+        encodingProfileKey:
+          type: integer
+          format: int64
+        deliveryTechnology:
+          type: string
+        encodingProfileLabel:
+          type: string
         sizeInBytes:
           type: integer
           format: int64
+        creationDate:
+          type: string
+          format: date-time
+          example: '2021-04-08T20:28:33Z'
         retentionInMinutes:
           type: integer
           format: int32
-        durationInMilliSeconds:
-          type: integer
-          format: int64
-        bitRate:
-          type: integer
-          format: int64
         videoTracks:
           type: array
           items:
@@ -4629,18 +4888,12 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AudioTrack'
-        deliveryTechnology:
-          type: string
+        imageDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/ImageDetail'
         externalDeliveryTechnology:
           type: string
-        externalDeliveryURL:
-          type: string
-        externalReadOnlyStorage:
-          type: boolean
-        creationDate:
-          type: string
-          format: date-time
-          example: '2021-04-08T20:28:33Z'
     SourceSATChannelConf:
       type: object
       required:
@@ -4928,25 +5181,25 @@ components:
         trackIndex:
           type: integer
           format: int32
+        durationInMilliSeconds:
+          type: integer
+          format: int64
         width:
           type: integer
           format: int32
         height:
           type: integer
           format: int32
+        avgFrameRate:
+          type: integer
+          format: int32
         codecName:
-          type: string
-        profile:
           type: string
         bitRate:
           type: integer
           format: int64
-        avgFrameRate:
-          type: integer
-          format: int32
-        durationInMilliSeconds:
-          type: integer
-          format: int64
+        profile:
+          type: string
     WorkflowVariable:
       type: object
       required:
