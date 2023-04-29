@@ -1877,7 +1877,7 @@
           "required" : false,
           "schema" : {
             "type" : "string",
-            "enum" : [ "Add-Content", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks", "YouTube-Live-Broadcast" ]
+            "enum" : [ "Add-Content", "Add-Silent-Audio", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks", "YouTube-Live-Broadcast" ]
           }
         }, {
           "in" : "query",
@@ -5812,7 +5812,7 @@
           },
           "ingestionType" : {
             "type" : "string",
-            "enum" : [ "Add-Content", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks" ]
+            "enum" : [ "Add-Content", "Add-Silent-Audio", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks" ]
           },
           "startProcessing" : {
             "type" : "string",
@@ -6680,7 +6680,7 @@
           },
           "Type" : {
             "type" : "string",
-            "enum" : [ "Add-Content", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "GroupOfTasks" ]
+            "enum" : [ "Add-Content", "Add-Silent-Audio", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "GroupOfTasks" ]
           },
           "Parameters" : {
             "type" : "object",
