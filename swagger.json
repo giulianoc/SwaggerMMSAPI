@@ -5325,6 +5325,616 @@
         }
       }
     },
+    "/statistic/request/perContent" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per content",
+        "operationId" : "listStatisticPerContent",
+        "description" : "list statistics per contents",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "start",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rows",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "userId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "title",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "startStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "endStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "totalNumFoundToBeCalculated",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "response" ],
+                    "properties" : {
+                      "response" : {
+                        "type" : "object",
+                        "required" : [ "numFound", "contentDetails" ],
+                        "properties" : {
+                          "numFound" : {
+                            "type" : "integer",
+                            "format" : "int32"
+                          },
+                          "contentDetails" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "required" : [ "title", "count" ],
+                              "properties" : {
+                                "title" : {
+                                  "type" : "string"
+                                },
+                                "count" : {
+                                  "type" : "integer",
+                                  "format" : "int64"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perUser" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per user",
+        "operationId" : "listStatisticPerUser",
+        "description" : "list statistics per user",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "start",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rows",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "userId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "title",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "startStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "endStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "totalNumFoundToBeCalculated",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "response" ],
+                    "properties" : {
+                      "response" : {
+                        "type" : "object",
+                        "required" : [ "numFound", "userDetails" ],
+                        "properties" : {
+                          "numFound" : {
+                            "type" : "integer",
+                            "format" : "int32"
+                          },
+                          "userDetails" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "required" : [ "userId", "count" ],
+                              "properties" : {
+                                "userId" : {
+                                  "type" : "string"
+                                },
+                                "count" : {
+                                  "type" : "integer",
+                                  "format" : "int64"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perMonth" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per month",
+        "operationId" : "listStatisticPerMonth",
+        "description" : "list statistics per month",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "start",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rows",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "userId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "title",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "startStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "endStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "totalNumFoundToBeCalculated",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "response" ],
+                    "properties" : {
+                      "response" : {
+                        "type" : "object",
+                        "required" : [ "numFound", "monthDetails" ],
+                        "properties" : {
+                          "numFound" : {
+                            "type" : "integer",
+                            "format" : "int32"
+                          },
+                          "monthDetails" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "required" : [ "date", "count" ],
+                              "properties" : {
+                                "date" : {
+                                  "type" : "string"
+                                },
+                                "count" : {
+                                  "type" : "integer",
+                                  "format" : "int64"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perDay" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per day",
+        "operationId" : "listStatisticPerDay",
+        "description" : "list statistics per day",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "start",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rows",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "userId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "title",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "startStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "endStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "totalNumFoundToBeCalculated",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "response" ],
+                    "properties" : {
+                      "response" : {
+                        "type" : "object",
+                        "required" : [ "numFound", "dayDetails" ],
+                        "properties" : {
+                          "numFound" : {
+                            "type" : "integer",
+                            "format" : "int32"
+                          },
+                          "dayDetails" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "required" : [ "date", "count" ],
+                              "properties" : {
+                                "date" : {
+                                  "type" : "string"
+                                },
+                                "count" : {
+                                  "type" : "integer",
+                                  "format" : "int64"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perHour" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per hour",
+        "operationId" : "listStatisticPerHour",
+        "description" : "list statistics per hour",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "start",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rows",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "userId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "title",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "startStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "endStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "totalNumFoundToBeCalculated",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "response" ],
+                    "properties" : {
+                      "response" : {
+                        "type" : "object",
+                        "required" : [ "numFound", "hourDetails" ],
+                        "properties" : {
+                          "numFound" : {
+                            "type" : "integer",
+                            "format" : "int32"
+                          },
+                          "hourDetails" : {
+                            "type" : "array",
+                            "items" : {
+                              "type" : "object",
+                              "required" : [ "date", "count" ],
+                              "properties" : {
+                                "date" : {
+                                  "type" : "string"
+                                },
+                                "count" : {
+                                  "type" : "integer",
+                                  "format" : "int64"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
     "/conf/email" : {
       "get" : {
         "tags" : [ "email" ],
