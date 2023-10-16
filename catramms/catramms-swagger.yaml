@@ -39,7 +39,7 @@
     "description" : "<ul><li>A media item or a live content can be delivered only if it is authorized<li>The APIs in this section allow you to create an authorization for the specified media items and provides you a 'tokenized' URL for the delivery</ul>"
   }, {
     "name" : "workflow",
-    "description" : "<img src=\"https://github.com/giulianoc/CatraMMS/raw/master/docs/WorkflowEditor.png\" alt=\"Workflow Editor\"><ul><li>A workflow is a sequence of Tasks involved in moving from the beginning to the end of a working process<li>A Task inherits by default as input the output of his parent. For example, if we have a Concat task and, on success, the Encode task, the Encode Task will inherit authomatically the 'concatenated' media item  output of his parent Concat Task<li>A Task can be executed based on the status of his parent Task. Possible status are<ul><li>onSuccess<li>onFailure<li>onComplete</ul><li>Here follows the Tasks defined by the MMS platform in alphabetical order<ul><li><b>Add-Content</b>, it adds a new content into the MMS Workspace. It supports two options<ul><li><b>pull</b>, the binary of the content is downloaded by the MMS through a url provided by the User. Protocols supported are http, https, ftp, ftps<li><b>push</b>, the binary of the content is uploaded calling the appropriate API</ul><li><b>Awaiting-The-Beginning</b>, it generates a live video based on a Picture provided as input and showes the picture with a countdown up to the beginning of the event. The live video can be delivered to a CDN or through a live HLS format<li><b>Change-File-Format</b>, it generates a new media item having the new format. No re-encoding is done, just change the format/container<li><b>Check-Streaming</b>, it verifies if the streaming specified by a URL provided as input is working<li><b>Concat-Demuxer</b>, it generates a new media item as concatenation of videos having same codecs<li><b>Cut</b>, it generates a new media item as cut of a video-audio<li><b>Encode</b>, it generates one or more new variants of an existing media item using a profile or set of profiles provided as input<li><b>Extract-Tracks</b>, it generates a new media item with the extraction of tracks of a media item provided as input<li><b>Email-Notification</b>, it sends an email<li><b>Face-Identification</b>, it generates a new video (an avi video using h264 as codec without audio) that it is a copy of the provided input video where all the faces are highlighted with a circle or a rectangle having the name of the identified face. it receives a list of tags to be used as filter to select images inside the MMS to be used to train the deep learned model to identify the face inside a video<li><b>Face-Recognition</b>, it receives a video as input and generates, depending on the Output parameter<ul><li>another video (an avi video using h264 as codec without audio) that it is a copy of the input video where all the faces are highlighed with a circle or a rectangle<li>an image for each face met inside the input video. All these ingested images could be used to train the deep learned model to identify (so not just recognize) the face inside a video. In this scenario, it is possible to tag all the images ingested and use them in the FaceIdentification Task to identify the faces</ul><li><b>Frame</b>, it generates a jpg image that it is a Frame from a video<li><b>FTP-Delivery</b>, it uploads the media item on a ftp site<li><b>GroupOfTasks</b>, it is a special Task used when the Workflow has to execute a list of Tasks in parallel or sequentially<li><b>HTTP-Callback</b>, it calls an HTTP, any HTTP method, defined by the Task parameters<li><b>I-Frames</b>, it generates all the I-Frames of a video and add them into MMS<li><b>Intro-Outro-Overlay</b>, it generates a video that is the composition of the intro, main and outro videos<img src=\"https://github.com/giulianoc/CatraMMS/raw/master/docs/TASK_39_Intro_Outro_Overlay.png\" alt=\"Intro_Outro_Overlay\"/><ul><li>The last part of the intro video is overlayed with the initial part of the main video<li>The initial part of the outro video is overlayed with the last part of the main video<li>Generally the intro and outro videos have an alpha component (transparency) that is used during the overlay. This is used to implement a 'transition' from the intro video to the main video and from the main video to the outro video<li>The intro and outro videos may contain an alpha component to be transparent during the overlay with the main video<li>This task will mute (default behavior) the audio of the intro and outro videos during the overlay</ul><li><b>Live-Cut</b>, it generates a video as a cut from a live feed. In order to make the Live-Cut working fine, it is supposed that a Live-Recorder task is or has been active on the same live feed. Internally, the Live-Cut Task generates a new Workflow to concatenate all the chunks needed and then performs a cut generating a new Media Item<li><b>Live-Grid</b>, it receives a list of live streaming as input and generates one live content as output that it is a composition of the input live streaming. The new output live streaming can be delivered using the HLS protocol<li><b>Live-Proxy</b>, it gets a live feed as input and proxy it to a CDN or generates a live content that is able to be delivered as an HLS format<li><b>Live-Recorder</b>, it records a live feed and generates periodically chunks (media items) of a specified duration (i.e. 60 seconds). The same feed can be provided as output to several destination<li><b>Local-Copy</b>, it is used for custom use cases<li><b>Media-Cross-Reference</b>, it generates a cross reference between two media items. It is a kind of link between two media items. For example, a link could be 'imageOfVideo' to join a video and his image/thumbnail. The Cross Reference allows you to navigate from one video to another<li><b>Motion-JPEG-by-I-Frames</b>, it generates a Motion JPEG video by the I-Frames of the video<li><b>Motion-JPEG-by-Periodical-Frames</b>, it generates a Motion JPEG video by periodical Frames of the video<li><b>Overlay-Image-On-Video</b>, it generates a video overlaying an Image on top of a video both provided as input<li><b>Overlay-Text-On-Video</b>, it generates a video overlaying a text on top of a video both provided as input<li><b>Periodical-Frames</b>, it generates periodical frames from a video provided as input<li><b>Picture-In-Picture</b>, it generates a video overlaing a video on another video both received as input<li><b>Post-On-Facebook</b>, it Post a media item on Facebook<li><b>Post-On-YouTube</b>, it Post a media item on YouTube<li><b>Remove-Content</b>, it removes one or more media items from MMS<li><b>Slideshow</b>, it generates a Slideshow video (mp4 file) using images media items provided as input<li><b>Video-Speed</b>, it generates a new video speeding up or slowing down a provided input video<li><b>VOD-Proxy</b>, it generates a live content starting from one or more VODs media items. The live content can be proxied to a CDN or delivered it through a live HLS delivery<li><b>YouTube-Live-Broadcast</b>, it creates a live event on YouTube feeding it with a live feed or a VOD sent continuously (loop)</ul></ul>"
+    "description" : "<img src=\"https://github.com/giulianoc/CatraMMS/raw/master/docs/WorkflowEditor.png\" alt=\"Workflow Editor\"><ul><li>A workflow is a sequence of Tasks involved in moving from the beginning to the end of a working process<li>A Task inherits by default as input the output of his parent. For example, if we have a Concat task and, on success, the Encode task, the Encode Task will inherit authomatically the 'concatenated' media item  output of his parent Concat Task<li>A Task can be executed based on the status of his parent Task. Possible status are<ul><li>onSuccess<li>onFailure<li>onComplete</ul><li>Here follows the Tasks defined by the MMS platform in alphabetical order<ul><li><b>Add-Content</b>, it adds a new content into the MMS Workspace. It supports two options<ul><li><b>pull</b>, the binary of the content is downloaded by the MMS through a url provided by the User. Protocols supported are http, https, ftp, ftps<li><b>push</b>, the binary of the content is uploaded calling the appropriate API</ul><li><b>Add-Silent-Audio</b> adds an entire silent audio track or a silent audio part at the beginning or at the end of the already present audio track<li><b>Awaiting-The-Beginning</b>, it generates a live video based on a Picture provided as input and showes the picture with a countdown up to the beginning of the event. The live video can be delivered to a CDN or through a live HLS format<li><b>Change-File-Format</b>, it generates a new media item having the new format. No re-encoding is done, just change the format/container<li><b>Check-Streaming</b>, it verifies if the streaming specified by a URL provided as input is working<li><b>Concat-Demuxer</b>, it generates a new media item as concatenation of videos having same codecs<li><b>Cut</b>, it generates a new media item as cut of a video-audio<li><b>Encode</b>, it generates one or more new variants of an existing media item using a profile or set of profiles provided as input<li><b>Extract-Tracks</b>, it generates a new media item with the extraction of tracks of a media item provided as input<li><b>Email-Notification</b>, it sends an email<li><b>Face-Identification</b>, it generates a new video (an avi video using h264 as codec without audio) that it is a copy of the provided input video where all the faces are highlighted with a circle or a rectangle having the name of the identified face. it receives a list of tags to be used as filter to select images inside the MMS to be used to train the deep learned model to identify the face inside a video<li><b>Face-Recognition</b>, it receives a video as input and generates, depending on the Output parameter<ul><li>another video (an avi video using h264 as codec without audio) that it is a copy of the input video where all the faces are highlighed with a circle or a rectangle<li>an image for each face met inside the input video. All these ingested images could be used to train the deep learned model to identify (so not just recognize) the face inside a video. In this scenario, it is possible to tag all the images ingested and use them in the FaceIdentification Task to identify the faces</ul><li><b>Frame</b>, it generates a jpg image that it is a Frame from a video<li><b>FTP-Delivery</b>, it uploads the media item on a ftp site<li><b>GroupOfTasks</b>, it is a special Task used when the Workflow has to execute a list of Tasks in parallel or sequentially<li><b>HTTP-Callback</b>, it calls an HTTP, any HTTP method, defined by the Task parameters<li><b>I-Frames</b>, it generates all the I-Frames of a video and add them into MMS<li><b>Intro-Outro-Overlay</b>, it generates a video that is the composition of the intro, main and outro videos<img src=\"https://github.com/giulianoc/CatraMMS/raw/master/docs/TASK_39_Intro_Outro_Overlay.png\" alt=\"Intro_Outro_Overlay\"/><ul><li>The last part of the intro video is overlayed with the initial part of the main video<li>The initial part of the outro video is overlayed with the last part of the main video<li>Generally the intro and outro videos have an alpha component (transparency) that is used during the overlay. This is used to implement a 'transition' from the intro video to the main video and from the main video to the outro video<li>The intro and outro videos may contain an alpha component to be transparent during the overlay with the main video<li>This task will mute (default behavior) the audio of the intro and outro videos during the overlay</ul><li><b>Live-Cut</b>, it generates a video as a cut from a live feed. In order to make the Live-Cut working fine, it is supposed that a Live-Recorder task is or has been active on the same live feed. Internally, the Live-Cut Task generates a new Workflow to concatenate all the chunks needed and then performs a cut generating a new Media Item<li><b>Live-Grid</b>, it receives a list of live streaming as input and generates one live content as output that it is a composition of the input live streaming. The new output live streaming can be delivered using the HLS protocol<li><b>Live-Proxy</b>, it gets a live feed as input and proxy it to a CDN or generates a live content that is able to be delivered as an HLS format<li><b>Live-Recorder</b>, it records a live feed and generates periodically chunks (media items) of a specified duration (i.e. 60 seconds). The same feed can be provided as output to several destination<li><b>Local-Copy</b>, it is used for custom use cases<li><b>Media-Cross-Reference</b>, it generates a cross reference between two media items. It is a kind of link between two media items. For example, a link could be 'imageOfVideo' to join a video and his image/thumbnail. The Cross Reference allows you to navigate from one video to another<li><b>Motion-JPEG-by-I-Frames</b>, it generates a Motion JPEG video by the I-Frames of the video<li><b>Motion-JPEG-by-Periodical-Frames</b>, it generates a Motion JPEG video by periodical Frames of the video<li><b>Overlay-Image-On-Video</b>, it generates a video overlaying an Image on top of a video both provided as input<li><b>Overlay-Text-On-Video</b>, it generates a video overlaying a text on top of a video both provided as input<li><b>Periodical-Frames</b>, it generates periodical frames from a video provided as input<li><b>Picture-In-Picture</b>, it generates a video overlaing a video on another video both received as input<li><b>Post-On-Facebook</b>, it Post a media item on Facebook<li><b>Post-On-YouTube</b>, it Post a media item on YouTube<li><b>Remove-Content</b>, it removes one or more media items from MMS<li><b>Slideshow</b>, it generates a Slideshow video (mp4 file) using images media items provided as input<li><b>Video-Speed</b>, it generates a new video speeding up or slowing down a provided input video<li><b>VOD-Proxy</b>, it generates a live content starting from one or more VODs media items. The live content can be proxied to a CDN or delivered it through a live HLS delivery<li><b>YouTube-Live-Broadcast</b>, it creates a live event on YouTube feeding it with a live feed or a VOD sent continuously (loop)</ul></ul>"
   }, {
     "name" : "encoding",
     "description" : "<ul><li>An EncodingJob is an activity that has to be done by the Encoder, i.e. an encoding of a video or the generation of a SlideShow video, ...<li>Each EncodingJob has a Priority field used to determine the execution order<li>Next APIs will allow you<ul><li>to know all the running EncodingJobs based on all the Encoders or on a specific Encoder<li>to know the EncodingJobs that are in the queue waiting a free Encoder to be executed<li>to kill a running EncodingJob<li>to cancel an EncodingJob from the queue<li>to change the Priority of an EncodingJob<li>to execute again the encoding</ul></ul>"
@@ -67,6 +67,9 @@
   }, {
     "name" : "encoder",
     "description" : "<ul><li>This section contains APIs to add/remove encoders to the MMS platform and associate them to workspaces. Most of this APIs require the 'admin' priviledge<li>This section contains also encodersPool APIs, they are used to group encoders. These APIs do not need the 'admin' priviledge to be executed<li>The EncodersPool can be specified inside the Task and, in this case, the MMS will perform a balancing among all the encoders included into the EncodersPool</ul>"
+  }, {
+    "name" : "statistic",
+    "description" : "<ul><li>API to manage statistics of the deliveries</ul>"
   } ],
   "paths" : {
     "/user" : {
@@ -1454,6 +1457,15 @@
           "schema" : {
             "type" : "boolean"
           }
+        }, {
+          "name" : "dependencyInfo",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
         } ],
         "responses" : {
           "200" : {
@@ -1673,7 +1685,7 @@
           "explode" : true,
           "schema" : {
             "type" : "string",
-            "enum" : [ "Add-Content", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks", "YouTube-Live-Broadcast" ]
+            "enum" : [ "Add-Content", "Add-Silent-Audio", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks", "YouTube-Live-Broadcast" ]
           }
         }, {
           "name" : "asc",
@@ -4448,6 +4460,675 @@
         }
       }
     },
+    "/statistic/request" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list all Statistic",
+        "description" : "list all statistics",
+        "operationId" : "listStatistic",
+        "parameters" : [ {
+          "name" : "start",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rows",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "startStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "endStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200_26"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "statistic" ],
+        "summary" : "add a statistic entry",
+        "description" : "add a statistic entry",
+        "operationId" : "addStatistic",
+        "requestBody" : {
+          "description" : "Statistic details",
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Statistic"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Statistic"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perContent" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per content",
+        "description" : "list statistics per contents",
+        "operationId" : "listStatisticPerContent",
+        "parameters" : [ {
+          "name" : "start",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rows",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "startStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "endStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "totalNumFoundToBeCalculated",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200_27"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perUser" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per user",
+        "description" : "list statistics per user",
+        "operationId" : "listStatisticPerUser",
+        "parameters" : [ {
+          "name" : "start",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rows",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "startStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "endStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "totalNumFoundToBeCalculated",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200_28"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perMonth" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per month",
+        "description" : "list statistics per month",
+        "operationId" : "listStatisticPerMonth",
+        "parameters" : [ {
+          "name" : "start",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rows",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "startStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "endStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "totalNumFoundToBeCalculated",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200_29"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perDay" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per day",
+        "description" : "list statistics per day",
+        "operationId" : "listStatisticPerDay",
+        "parameters" : [ {
+          "name" : "start",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rows",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "startStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "endStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "totalNumFoundToBeCalculated",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200_30"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
+    "/statistic/request/perHour" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list Statistic per hour",
+        "description" : "list statistics per hour",
+        "operationId" : "listStatisticPerHour",
+        "parameters" : [ {
+          "name" : "start",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "rows",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "userId",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "title",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "startStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "endStatisticDate",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "name" : "minimalNextRequestDistanceInSeconds",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "name" : "totalNumFoundToBeCalculated",
+          "in" : "query",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "boolean"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/inline_response_200_31"
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      }
+    },
     "/conf/email" : {
       "get" : {
         "tags" : [ "email" ],
@@ -4462,7 +5143,7 @@
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "$ref" : "#/components/schemas/inline_response_200_26"
+                    "$ref" : "#/components/schemas/inline_response_200_32"
                   }
                 }
               }
@@ -4539,7 +5220,7 @@
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "$ref" : "#/components/schemas/inline_response_200_26"
+                    "$ref" : "#/components/schemas/inline_response_200_32"
                   }
                 }
               }
@@ -5017,7 +5698,7 @@
           },
           "ingestionType" : {
             "type" : "string",
-            "enum" : [ "Add-Content", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks" ]
+            "enum" : [ "Add-Content", "Add-Silent-Audio", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "ContentUpdate", "ContentRemove", "GroupOfTasks" ]
           },
           "startProcessing" : {
             "type" : "string",
@@ -5569,6 +6250,29 @@
           }
         }
       },
+      "Statistic" : {
+        "required" : [ "confStreamKey", "ipAddress", "physicalPathKey", "title", "userId" ],
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "string"
+          },
+          "ipAddress" : {
+            "type" : "string"
+          },
+          "physicalPathKey" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "confStreamKey" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "title" : {
+            "type" : "string"
+          }
+        }
+      },
       "Support" : {
         "required" : [ "Subject", "Text", "UserEmailAddress" ],
         "type" : "object",
@@ -5863,7 +6567,7 @@
           },
           "Type" : {
             "type" : "string",
-            "enum" : [ "Add-Content", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "GroupOfTasks" ]
+            "enum" : [ "Add-Content", "Add-Silent-Audio", "Remove-Content", "Encode", "Frame", "Periodical-Frames", "I-Frames", "Motion-JPEG-by-Periodical-Frames", "Motion-JPEG-by-I-Frames", "Slideshow", "Concat-Demuxer", "Cut", "Overlay-Image-On-Video", "Overlay-Text-On-Video", "FTP-Delivery", "HTTP-Callback", "Local-Copy", "Extract-Tracks", "Post-On-Facebook", "Post-On-YouTube", "Face-Recognition", "Face-Identification", "Live-Recorder", "Change-File-Format", "Video-Speed", "Picture-In-Picture", "Live-Proxy", "Live-Cut", "Live-Grid", "Awaiting-The-Beginning", "Intro-Outro-Overlay", "VOD-Proxy", "Email-Notification", "Media-Cross-Reference", "Workflow-As-Library", "Check-Streaming", "GroupOfTasks" ]
           },
           "Parameters" : {
             "type" : "object",
@@ -6909,6 +7613,195 @@
           }
         }
       },
+      "statisticrequest_response" : {
+        "required" : [ "numFound", "statistic" ],
+        "type" : "object",
+        "properties" : {
+          "numFound" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "statistic" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Statistic"
+            }
+          }
+        }
+      },
+      "inline_response_200_26" : {
+        "required" : [ "response" ],
+        "type" : "object",
+        "properties" : {
+          "response" : {
+            "$ref" : "#/components/schemas/statisticrequest_response"
+          }
+        }
+      },
+      "statisticrequestperContent_response_contentDetails" : {
+        "required" : [ "count", "title" ],
+        "type" : "object",
+        "properties" : {
+          "title" : {
+            "type" : "string"
+          },
+          "count" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "statisticrequestperContent_response" : {
+        "required" : [ "contentDetails", "numFound" ],
+        "type" : "object",
+        "properties" : {
+          "numFound" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "contentDetails" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/statisticrequestperContent_response_contentDetails"
+            }
+          }
+        }
+      },
+      "inline_response_200_27" : {
+        "required" : [ "response" ],
+        "type" : "object",
+        "properties" : {
+          "response" : {
+            "$ref" : "#/components/schemas/statisticrequestperContent_response"
+          }
+        }
+      },
+      "statisticrequestperUser_response_userDetails" : {
+        "required" : [ "count", "userId" ],
+        "type" : "object",
+        "properties" : {
+          "userId" : {
+            "type" : "string"
+          },
+          "count" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "statisticrequestperUser_response" : {
+        "required" : [ "numFound", "userDetails" ],
+        "type" : "object",
+        "properties" : {
+          "numFound" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "userDetails" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/statisticrequestperUser_response_userDetails"
+            }
+          }
+        }
+      },
+      "inline_response_200_28" : {
+        "required" : [ "response" ],
+        "type" : "object",
+        "properties" : {
+          "response" : {
+            "$ref" : "#/components/schemas/statisticrequestperUser_response"
+          }
+        }
+      },
+      "statisticrequestperMonth_response_monthDetails" : {
+        "required" : [ "count", "date" ],
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string"
+          },
+          "count" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }
+      },
+      "statisticrequestperMonth_response" : {
+        "required" : [ "monthDetails", "numFound" ],
+        "type" : "object",
+        "properties" : {
+          "numFound" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "monthDetails" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/statisticrequestperMonth_response_monthDetails"
+            }
+          }
+        }
+      },
+      "inline_response_200_29" : {
+        "required" : [ "response" ],
+        "type" : "object",
+        "properties" : {
+          "response" : {
+            "$ref" : "#/components/schemas/statisticrequestperMonth_response"
+          }
+        }
+      },
+      "statisticrequestperDay_response" : {
+        "required" : [ "dayDetails", "numFound" ],
+        "type" : "object",
+        "properties" : {
+          "numFound" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "dayDetails" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/statisticrequestperMonth_response_monthDetails"
+            }
+          }
+        }
+      },
+      "inline_response_200_30" : {
+        "required" : [ "response" ],
+        "type" : "object",
+        "properties" : {
+          "response" : {
+            "$ref" : "#/components/schemas/statisticrequestperDay_response"
+          }
+        }
+      },
+      "statisticrequestperHour_response" : {
+        "required" : [ "hourDetails", "numFound" ],
+        "type" : "object",
+        "properties" : {
+          "numFound" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "hourDetails" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/statisticrequestperMonth_response_monthDetails"
+            }
+          }
+        }
+      },
+      "inline_response_200_31" : {
+        "required" : [ "response" ],
+        "type" : "object",
+        "properties" : {
+          "response" : {
+            "$ref" : "#/components/schemas/statisticrequestperHour_response"
+          }
+        }
+      },
       "confemail_response" : {
         "required" : [ "emailConf", "numFound" ],
         "type" : "object",
@@ -6925,7 +7818,7 @@
           }
         }
       },
-      "inline_response_200_26" : {
+      "inline_response_200_32" : {
         "required" : [ "response" ],
         "type" : "object",
         "properties" : {
