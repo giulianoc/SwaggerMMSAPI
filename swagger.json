@@ -5191,6 +5191,137 @@
         }
       }
     },
+    "/statistic/request" : {
+      "get" : {
+        "tags" : [ "statistic" ],
+        "summary" : "list all Statistic",
+        "operationId" : "listStatistic",
+        "description" : "list all statistics",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "start",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "rows",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        }, {
+          "in" : "query",
+          "name" : "userId",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "title",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "startStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        }, {
+          "in" : "query",
+          "name" : "endStatisticDate",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2021-04-08T20:28:33Z"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "response" ],
+                    "properties" : {
+                      "response" : {
+                        "type" : "object",
+                        "required" : [ "numFound", "statistic" ],
+                        "properties" : {
+                          "numFound" : {
+                            "type" : "integer",
+                            "format" : "int32"
+                          },
+                          "statistic" : {
+                            "type" : "array",
+                            "items" : {
+                              "$ref" : "#/components/schemas/Statistic"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "statistic" ],
+        "summary" : "add a statistic entry",
+        "operationId" : "addStatistic",
+        "description" : "add a statistic entry",
+        "responses" : {
+          "201" : {
+            "description" : "Statistic details",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Statistic"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/Statistic"
+              }
+            }
+          },
+          "description" : "Statistic details"
+        }
+      }
+    },
     "/conf/email" : {
       "get" : {
         "tags" : [ "email" ],
@@ -6389,6 +6520,29 @@
             "type" : "string"
           },
           "deliverySystem" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Statistic" : {
+        "type" : "object",
+        "required" : [ "userId", "ipAddress", "physicalPathKey", "confStreamKey", "title" ],
+        "properties" : {
+          "userId" : {
+            "type" : "string"
+          },
+          "ipAddress" : {
+            "type" : "string"
+          },
+          "physicalPathKey" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "confStreamKey" : {
+            "type" : "integer",
+            "format" : "int64"
+          },
+          "title" : {
             "type" : "string"
           }
         }
