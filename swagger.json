@@ -64,6 +64,9 @@
   }, {
     "name" : "encoder",
     "description" : "<ul><li>This section contains APIs to add/remove encoders to the MMS platform and associate them to workspaces. Most of this APIs require the 'admin' priviledge<li>This section contains also encodersPool APIs, they are used to group encoders. These APIs do not need the 'admin' priviledge to be executed<li>The EncodersPool can be specified inside the Task and, in this case, the MMS will perform a balancing among all the encoders included into the EncodersPool</ul>"
+  }, {
+    "name" : "statistic",
+    "description" : "<ul><li>API to manage statistics of the deliveries</ul>"
   } ],
   "security" : [ {
     "BasicAuth" : [ ]
