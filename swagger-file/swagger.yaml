@@ -30,8 +30,8 @@ tags:
     description: <ul><li>A 'Workflow As Library' is a Workflow that is registered into MMS and can be used as an Elementary Task in another Workflow<li>Let s explain it doing an example<ul><li>assume we have a Workflow retrieving the best Picture from a video<li>this workflow is composed by several Tasks<ul><li>a Task looking for Faces into the Video<li>if it does not find any face (OnError event), there is another Task getting a Picture at a specified instance (i.e. 30 seconds since the starting of the Video)<li>then we have the encoding of the Picture<li>and so on</ul><li>let s call this Workflow as 'Best Picture Of a Video'<li>now, let s assume we have another Workflow registering a live feed and generating a chunk (video media item) every 60 seconds<li>we want to have a picture for every chunk generated during the registration<li>to achieve this, we will register the 'Best Picture Of a Video' Workflow into the MMS as 'Workflow As Library'<li>then we use it into the new Workflow as we usually do with any Elementary Task</ul>
   - name: encodingProfiles
     description: <ul><li>A media item (video, audio or image) can be encoded using one or more profiles<li>There are several Predefined Encoding Profiles defined by the MMS system, however a User can define new encoding profiles<li>It is possible to add a single encoding profile as well as a set of profiles and apply the entire set of profiles to one content using just one Task</ul>
-  - name: channels
-    description: <ul><li>A channel represents a live feed<li>A property of the channel is 'sourceType' that identifies the type of the channel<ul><li>IP_PULL, the live feed is retrieved by the MMS through a URL (srt, rtmp, http, ...). In this scenario MMS is a client and the host of the URL is a server<li>IP_PUSH, the live feed is pushed to the MMS that is listenning on a specified IP/Port. In this scenario MMS is a server and the host pushing the live feed is the client<li>CaptureLive, the MMS retrieve the live feed through a Capture device (capture card, HDMI, ...)<li>Satellite, the MMS retrieve the feed from the satellite</ul><li>A channel can have any custom metadata using a json format</ul>
+  - name: streams
+    description: <ul><li>A Stream represents a live feed<li>A property of the stream is 'sourceType' that identifies the type of the channel<ul><li>IP_PULL, the live feed is retrieved by the MMS through a URL (srt, rtmp, http, ...). In this scenario MMS is a client and the host of the URL is a server<li>IP_PUSH, the live feed is pushed to the MMS that is listenning on a specified IP/Port. In this scenario MMS is a server and the host pushing the live feed is the client<li>CaptureLive, the MMS retrieve the live feed through a Capture device (capture card, HDMI, ...)<li>Satellite, the MMS retrieve the feed from the satellite</ul><li>A stream can have any custom metadata using a json format</ul>
   - name: cdn
     description: <ul><li>This section describes the APIs to configure a CDN<li>MMS works with several CDNs<ul><li>CDN77<li>AWS</ul></ul>
   - name: social
@@ -1536,7 +1536,7 @@ paths:
         - workflow
       summary: update the IngestionJob metadata
       operationId: updateIngestionJob
-      description: This API updates the IngestionJob metadata. It is possible to update the IngestionJob metadata only in case his status is Start_TaskQueued and his type is LiveRecorder. In this scenario it is possible to change the ingestion job label and/or the channel label and/or the recording period start and/or the recording period end and/or the recording virtual vod. It can be executed only by a User having the editMedia or admin priviledge
+      description: This API updates the IngestionJob metadata. It is possible to update the IngestionJob metadata only in case his status is Start_TaskQueued and his type is LiveRecorder. In this scenario it is possible to change the ingestion job label and/or the stream label and/or the recording period start and/or the recording period end and/or the recording virtual vod. It can be executed only by a User having the editMedia or admin priviledge
       parameters:
         - in: path
           name: ingestionJobKey
@@ -3247,13 +3247,13 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /conf/channel:
+  /conf/stream:
     get:
       tags:
-        - channels
-      summary: list all channels configuration
-      operationId: listChannelsConfiguration
-      description: list all channels configuration
+        - streams
+      summary: list all streams configuration
+      operationId: listStreamsConfiguration
+      description: list all streams configuration
       parameters:
         - in: query
           name: start
@@ -3261,17 +3261,25 @@ paths:
           schema:
             type: integer
             format: int32
+            default: 0
         - in: query
           name: rows
           required: false
           schema:
             type: integer
             format: int32
+            default: 30
         - in: query
           name: label
           required: false
           schema:
             type: string
+        - in: query
+          name: labelLike
+          required: false
+          schema:
+            type: boolean
+            default: true
         - in: query
           name: url
           required: false
@@ -3282,7 +3290,7 @@ paths:
           required: false
           schema:
             type: string
-            enum: [IP_PULL, IP_PUSH, Satellite, CaptureLive]
+            enum: [IP_PULL, IP_PUSH, TV, CaptureLive]
         - in: query
           name: type
           required: false
@@ -3311,7 +3319,7 @@ paths:
             enum: [asc, desc]
       responses:
         '200':
-          description: channel configuration details
+          description: stream configuration details
           content:
             application/json:
               schema:
@@ -3327,32 +3335,32 @@ paths:
                       type: object
                       required:
                         - numFound
-                        - channelConf
+                        - streamConf
                       properties:
                         numFound:
                           type: integer
                           format: int32
-                        channelConf:
+                        streamConf:
                           type: array
                           items:
-                            $ref: '#/components/schemas/ChannelConf'
+                            $ref: '#/components/schemas/StreamConf'
         '401':
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
     post:
       tags:
-        - channels
-      summary: add a channel configuration
-      operationId: addChannelConfiguration
-      description: add a channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+        - streams
+      summary: add a stream configuration
+      operationId: addStreamConfiguration
+      description: add a stream configuration. It can be executed only by a User having the editConfiguration or admin priviledge
       responses:
         '201':
-          description: channel configuration details
+          description: stream configuration details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChannelConf'
+                $ref: '#/components/schemas/StreamConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3361,15 +3369,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChannelConf'
-        description: 'ip channel configuration details'
-  /conf/channel/{confKey}:
+              $ref: '#/components/schemas/StreamConf'
+        description: 'ip stream configuration details'
+  /conf/stream/{confKey}:
     get:
       tags:
-        - channels
-      summary: get the channel configuration
-      operationId: channelConfiguration
-      description: get the channel configuration
+        - streams
+      summary: get the stream configuration
+      operationId: streamConfiguration
+      description: get the stream configuration
       parameters:
         - in: path
           name: confKey
@@ -3379,7 +3387,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: channel configuration details
+          description: stream configuration details
           content:
             application/json:
               schema:
@@ -3395,25 +3403,25 @@ paths:
                       type: object
                       required:
                         - numFound
-                        - channelConf
+                        - streamConf
                       properties:
                         numFound:
                           type: integer
                           format: int32
-                        channelConf:
+                        streamConf:
                           type: array
                           items:
-                            $ref: '#/components/schemas/ChannelConf'
+                            $ref: '#/components/schemas/StreamConf'
         '401':
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
     put:
       tags:
-        - channels
-      summary: update an channel configuration
-      operationId: modifyChannelConfiguration
-      description: update an channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+        - streams
+      summary: update an stream configuration
+      operationId: modifyStreamConfiguration
+      description: update a stream configuration. It can be executed only by a User having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3423,11 +3431,11 @@ paths:
             format: int64
       responses:
         '200':
-          description: ip channel configuration details
+          description: ip stream configuration details
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ChannelConf'
+                $ref: '#/components/schemas/StreamConf'
         '401':
           description: 'wrong basic authentication'
         '500':
@@ -3436,14 +3444,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChannelConf'
-        description: 'ip channel configuration details'
+              $ref: '#/components/schemas/StreamConf'
+        description: 'ip stream configuration details'
     delete:
       tags:
-        - channels
-      summary: delete an channel configuration
-      operationId: deleteChannelConfiguration
-      description: delete a channel configuration. It can be executed only by a User having the editConfiguration or admin priviledge
+        - streams
+      summary: delete a stream configuration
+      operationId: deleteStreamConfiguration
+      description: delete a stream configuration. It can be executed only by a User having the editConfiguration or admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3453,7 +3461,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: channel configuration details
+          description: stream configuration details
           content:
             application/json:
               schema:
@@ -3470,13 +3478,13 @@ paths:
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
-  /conf/sourceSatChannel:
+  /conf/sourceTVStream:
     get:
       tags:
-        - channels
-      summary: list all source SAT channels configuration
-      operationId: listSourceSATChannelsConfiguration
-      description: list all Source SAT channels configuration
+        - streams
+      summary: list all source TV streams configuration
+      operationId: listSourceTVStreamsConfiguration
+      description: list all Source TV streams configuration
       parameters:
         - in: query
           name: start
@@ -3531,7 +3539,7 @@ paths:
             enum: [asc, desc]
       responses:
         '200':
-          description: Source SAT channel configuration details
+          description: Source TV stream configuration details
           content:
             application/json:
               schema:
@@ -3547,28 +3555,28 @@ paths:
                       type: object
                       required:
                         - numFound
-                        - channelConf
+                        - streamConf
                       properties:
                         numFound:
                           type: integer
                           format: int32
-                        channelConf:
+                        streamConf:
                           type: array
                           items:
-                            $ref: '#/components/schemas/SourceSATChannelConf'
+                            $ref: '#/components/schemas/SourceTVStreamConf'
         '401':
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
     post:
       tags:
-        - channels
-      summary: add a Source SAT channel configuration
-      operationId: addSourceSATChannelConfiguration
-      description: add a Source SAT channel configuration. It can be executed only by a User having the admin priviledge
+        - streams
+      summary: add a Source TV stream configuration
+      operationId: addSourceTVStreamConfiguration
+      description: add a Source TV stream configuration. It can be executed only by a User having the admin priviledge
       responses:
         '201':
-          description: Source SAT channel configuration details
+          description: Source TV stream configuration details
           content:
             application/json:
               schema:
@@ -3589,15 +3597,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SourceSATChannelConf'
-        description: 'Source SAT channel configuration details'
-  /conf/sourceSatChannel/{confKey}:
+              $ref: '#/components/schemas/SourceTVStreamConf'
+        description: 'Source TV stream configuration details'
+  /conf/sourceTVStream/{confKey}:
     get:
       tags:
-        - channels
-      summary: get the Source SAT channel configuration
-      operationId: sourceSatChannelConfiguration
-      description: get the Source SAT channel configuration
+        - streams
+      summary: get the Source TV stream configuration
+      operationId: sourceTVStreamConfiguration
+      description: get the Source TV stream configuration
       parameters:
         - in: path
           name: confKey
@@ -3607,7 +3615,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: source SAT channel configuration details
+          description: source TV stream configuration details
           content:
             application/json:
               schema:
@@ -3623,25 +3631,25 @@ paths:
                       type: object
                       required:
                         - numFound
-                        - channelConf
+                        - streamConf
                       properties:
                         numFound:
                           type: integer
                           format: int32
-                        channelConf:
+                        streamConf:
                           type: array
                           items:
-                            $ref: '#/components/schemas/SourceSATChannelConf'
+                            $ref: '#/components/schemas/SourceTVStreamConf'
         '401':
           description: 'wrong basic authentication'
         '500':
           description: 'internal server error'
     put:
       tags:
-        - channels
-      summary: update a Source SAT channel configuration
-      operationId: modifySourceSATChannelConfiguration
-      description: update a Source SAT channel configuration. It can be executed only by a User having the admin priviledge
+        - streams
+      summary: update a Source TV stream configuration
+      operationId: modifySourceTVStreamConfiguration
+      description: update a Source TV stream configuration. It can be executed only by a User having the admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3651,7 +3659,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: Source SAT channel configuration details
+          description: Source TV stream configuration details
           content:
             application/json:
               schema:
@@ -3672,14 +3680,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SourceSATChannelConf'
-        description: 'Source SAT channel configuration details'
+              $ref: '#/components/schemas/SourceTVStreamConf'
+        description: 'Source TV stream configuration details'
     delete:
       tags:
-        - channels
-      summary: delete a Source SAT channel configuration
-      operationId: deleteSourceSATChannelConfiguration
-      description: delete a Source SAT channel configuration. It can be executed only by a User having the admin priviledge
+        - streams
+      summary: delete a Source TV stream configuration
+      operationId: deleteSourceTVStreamConfiguration
+      description: delete a Source TV stream configuration. It can be executed only by a User having the admin priviledge
       parameters:
         - in: path
           name: confKey
@@ -3689,7 +3697,7 @@ paths:
             format: int64
       responses:
         '200':
-          description: Source SAT channel configuration details
+          description: Source TV stream configuration details
           content:
             application/json:
               schema:
@@ -3742,7 +3750,7 @@ paths:
                         numFound:
                           type: integer
                           format: int32
-                        channelConf:
+                        cdn77Conf:
                           type: array
                           items:
                             $ref: '#/components/schemas/CDN77Conf'
@@ -4285,7 +4293,7 @@ components:
           format: int64
         configurationLabel:
           type: string
-    ChannelConf:
+    StreamConf:
       type: object
       required:
         - label
@@ -5000,7 +5008,7 @@ components:
             $ref: '#/components/schemas/ImageDetail'
         externalDeliveryTechnology:
           type: string
-    SourceSATChannelConf:
+    SourceTVStreamConf:
       type: object
       required:
         - confKey
