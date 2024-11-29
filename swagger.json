@@ -6,9 +6,6 @@
   }, {
     "description" : "Media Management System on cloud (staging)",
     "url" : "https://mms-api-test.catramms-cloud.com/catramms/1.0.1"
-  }, {
-    "description" : "Media Management System on CiborTV",
-    "url" : "https://mms-api.cibortv-mms.com/catramms/1.0.1"
   } ],
   "info" : {
     "description" : "Media Management System REST API",
@@ -3058,6 +3055,14 @@
           "schema" : {
             "type" : "integer",
             "format" : "int64"
+          }
+        }, {
+          "in" : "query",
+          "name" : "killType",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "kill", "restartWithinEncoder", "killToRestartByEngine" ]
           }
         } ],
         "responses" : {
