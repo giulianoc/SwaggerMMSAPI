@@ -2132,6 +2132,114 @@
         }
       }
     },
+    "/ingestionJob/{ingestionJobKey}/switchToNewEncoder" : {
+      "put" : {
+        "tags" : [ "workflow" ],
+        "summary" : "switch an IngestionJob to another Encoder",
+        "operationId" : "updateIngestionJob",
+        "description" : "This API switch the Encoder of a running IngestionJob. In case of the switching of a Broadcaster/Live Channel, the mandatory parameters are also newPushEncoderKey, newPushPublicEncoderName and newEncodersPoolLabel.",
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "ingestionJobKey",
+          "required" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "in" : "query",
+          "name" : "newPushEncoderKey",
+          "required" : false,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        }, {
+          "in" : "query",
+          "name" : "newPushPublicEncoderName",
+          "required" : false,
+          "schema" : {
+            "type" : "boolean"
+          }
+        }, {
+          "in" : "query",
+          "name" : "newEncodersPoolLabel",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "ingestion job updated successful",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object",
+                  "items" : {
+                    "type" : "object",
+                    "required" : [ "status" ],
+                    "properties" : {
+                      "status" : {
+                        "type" : "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400" : {
+            "description" : "Json field is not present or it is null"
+          },
+          "401" : {
+            "description" : "wrong basic authentication"
+          },
+          "500" : {
+            "description" : "internal server error"
+          }
+        },
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "type" : "object",
+                "items" : {
+                  "type" : "object",
+                  "required" : [ "IngestionType", "IngestionJobLabel", "ChannelLabel", "RecordingPeriodStart", "RecordingPeriodEnd", "RecordingVirtualVOD" ],
+                  "properties" : {
+                    "IngestionType" : {
+                      "type" : "string",
+                      "enum" : [ "Live-Recorder" ]
+                    },
+                    "IngestionJobLabel" : {
+                      "type" : "string"
+                    },
+                    "ChannelLabel" : {
+                      "type" : "string"
+                    },
+                    "RecordingPeriodStart" : {
+                      "type" : "string",
+                      "format" : "date-time",
+                      "example" : "2021-04-08T20:28:33Z"
+                    },
+                    "RecordingPeriodEnd" : {
+                      "type" : "string",
+                      "format" : "date-time",
+                      "example" : "2021-04-08T20:28:33Z"
+                    },
+                    "RecordingVirtualVOD" : {
+                      "type" : "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "description" : "IngestionJob fields to be updated"
+        }
+      }
+    },
     "/mediaItem" : {
       "get" : {
         "tags" : [ "mediaItems" ],
