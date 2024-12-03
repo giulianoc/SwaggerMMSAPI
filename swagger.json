@@ -2136,7 +2136,7 @@
       "put" : {
         "tags" : [ "workflow" ],
         "summary" : "switch an IngestionJob to another Encoder",
-        "operationId" : "updateIngestionJob",
+        "operationId" : "switchEncoder",
         "description" : "This API switch the Encoder of a running IngestionJob. In case of the switching of a Broadcaster/Live Channel, the mandatory parameters are also newPushEncoderKey, newPushPublicEncoderName and newEncodersPoolLabel.",
         "parameters" : [ {
           "in" : "path",
