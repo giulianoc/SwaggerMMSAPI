@@ -2171,23 +2171,7 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "ingestion job updated successful",
-            "content" : {
-              "application/json" : {
-                "schema" : {
-                  "type" : "object",
-                  "items" : {
-                    "type" : "object",
-                    "required" : [ "status" ],
-                    "properties" : {
-                      "status" : {
-                        "type" : "string"
-                      }
-                    }
-                  }
-                }
-              }
-            }
+            "description" : "ingestion job switch successful"
           },
           "400" : {
             "description" : "Json field is not present or it is null"
@@ -2198,45 +2182,6 @@
           "500" : {
             "description" : "internal server error"
           }
-        },
-        "requestBody" : {
-          "content" : {
-            "application/json" : {
-              "schema" : {
-                "type" : "object",
-                "items" : {
-                  "type" : "object",
-                  "required" : [ "IngestionType", "IngestionJobLabel", "ChannelLabel", "RecordingPeriodStart", "RecordingPeriodEnd", "RecordingVirtualVOD" ],
-                  "properties" : {
-                    "IngestionType" : {
-                      "type" : "string",
-                      "enum" : [ "Live-Recorder" ]
-                    },
-                    "IngestionJobLabel" : {
-                      "type" : "string"
-                    },
-                    "ChannelLabel" : {
-                      "type" : "string"
-                    },
-                    "RecordingPeriodStart" : {
-                      "type" : "string",
-                      "format" : "date-time",
-                      "example" : "2021-04-08T20:28:33Z"
-                    },
-                    "RecordingPeriodEnd" : {
-                      "type" : "string",
-                      "format" : "date-time",
-                      "example" : "2021-04-08T20:28:33Z"
-                    },
-                    "RecordingVirtualVOD" : {
-                      "type" : "boolean"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "description" : "IngestionJob fields to be updated"
         }
       }
     },
